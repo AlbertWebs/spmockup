@@ -21,14 +21,14 @@ const Hero = () => {
               </span>
             </div>
             
-            <h1 className="text-5xl lg:text-7xl font-black leading-tight animate-fade-in-up animation-delay-200">
-              <span className="text-[#172455] block animate-text-reveal">
+            <h1 className="text-5xl lg:text-7xl font-black leading-tight">
+              <span className="block text-[#172455] animate-slide-in-left">
                 We Create the Most
               </span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 mt-3 animate-gradient-x">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 mt-3 animate-scale-in bg-[length:200%_100%] animate-gradient-x animation-delay-400">
                 Engaging Events
               </span>
-              <span className="block text-gray-700 text-4xl lg:text-5xl mt-3 font-bold animate-fade-in-up animation-delay-400">
+              <span className="block text-gray-700 text-4xl lg:text-5xl mt-3 font-bold animate-slide-in-right animation-delay-800">
                 in the World Using Technology
               </span>
             </h1>
