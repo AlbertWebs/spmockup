@@ -58,12 +58,12 @@ const Hero = () => {
               
               {/* Center logo area */}
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-[#172455] via-[#1e3a8a] to-[#172455] flex items-center justify-center shadow-2xl animate-pulse-glow">
-                  <div className="text-center text-white">
-                    <div className="text-5xl font-black text-yellow-400 animate-bounce-slow">SP</div>
-                    <div className="text-xs mt-2 tracking-widest font-bold">STAGEPASS</div>
-                    <div className="text-xs opacity-80 font-medium">AUDIO VISUAL</div>
-                  </div>
+                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-[#172455] via-[#1e3a8a] to-[#172455] flex items-center justify-center shadow-2xl animate-pulse-glow p-12">
+                  <img 
+                    src="https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png" 
+                    alt="StagePass Logo" 
+                    className="w-full h-auto object-contain brightness-0 invert"
+                  />
                 </div>
               </div>
               
