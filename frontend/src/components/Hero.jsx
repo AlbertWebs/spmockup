@@ -25,10 +25,10 @@ const Hero = () => {
               <span className="block text-[#172455] animate-slide-in-left">
                 We Create the Most
               </span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 mt-3 animate-scale-in bg-[length:200%_100%] animate-gradient-x animation-delay-400">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 mt-4 animate-scale-in bg-[length:200%_100%] animate-gradient-x animation-delay-400">
                 Engaging Events
               </span>
-              <span className="block text-gray-700 text-3xl lg:text-4xl mt-3 font-bold animate-slide-in-right animation-delay-800">
+              <span className="block text-gray-700 text-3xl lg:text-4xl mt-6 font-bold animate-slide-in-right animation-delay-800">
                 in the World Using Technology
               </span>
             </h1>
