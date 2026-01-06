@@ -30,11 +30,11 @@ const Navbar = () => {
       <div className="container mx-auto px-6 lg:px-12">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center h-full py-0">
+          <div className="flex items-center h-full">
             <img 
               src="https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png" 
               alt="StagePass Logo" 
-              className="h-full w-auto object-contain py-2"
+              className="h-full w-auto object-contain"
             />
           </div>
 
