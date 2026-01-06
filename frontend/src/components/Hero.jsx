@@ -4,7 +4,7 @@ import { ArrowRight, Mic, Music, Lightbulb, Video, Sparkles } from 'lucide-react
 
 const Hero = () => {
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-blue-50 to-yellow-50 overflow-hidden">
+    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-blue-50 to-yellow-50 overflow-hidden pt-24">
       {/* Animated background elements */}
       <div className="absolute top-20 right-10 w-96 h-96 bg-yellow-200 rounded-full blur-3xl opacity-40 animate-pulse-slow"></div>
       <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-[#172455] rounded-full blur-3xl opacity-10 animate-pulse-slower"></div>
