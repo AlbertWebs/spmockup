@@ -28,13 +28,13 @@ const Navbar = () => {
       <div className="h-1 bg-gradient-to-r from-[#172455] via-yellow-500 to-[#172455]"></div>
       
       <div className="container mx-auto px-6 lg:px-12">
-        <div className="flex items-center justify-between h-20">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <div className="flex items-center">
+          <div className="flex items-center h-full py-0">
             <img 
               src="https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png" 
               alt="StagePass Logo" 
-              className="h-12 w-auto object-contain"
+              className="h-full w-auto object-contain py-2"
             />
           </div>
 
