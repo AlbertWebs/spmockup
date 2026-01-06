@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
-import { Phone, Mail, MapPin, Send } from 'lucide-react';
+import { Phone, Mail, MapPin, Send, Clock } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 
 const Contact = () => {
@@ -28,59 +28,74 @@ const Contact = () => {
   };
 
   return (
-    <section id="contact" className="py-24 bg-gradient-to-b from-white to-gray-50">
-      <div className="container mx-auto px-6 lg:px-12">
-        <div className="grid lg:grid-cols-2 gap-16">
+    <section id="contact" className="py-32 bg-gradient-to-b from-gray-50 to-white relative overflow-hidden">
+      {/* Background decoration */}
+      <div className="absolute top-20 left-0 w-[700px] h-[700px] bg-yellow-100 rounded-full blur-3xl opacity-30 animate-pulse-slow"></div>
+      <div className="absolute bottom-0 right-0 w-[700px] h-[700px] bg-[#172455] rounded-full blur-3xl opacity-5 animate-pulse-slower"></div>
+      
+      <div className="container mx-auto px-6 lg:px-12 relative z-10">
+        <div className="grid lg:grid-cols-2 gap-20">
           {/* Left - Contact Info */}
-          <div className="space-y-8">
+          <div className="space-y-10 animate-fade-in-left">
             <div>
-              <span className="text-sm font-semibold text-yellow-600 tracking-wider uppercase">Get In Touch</span>
-              <h2 className="text-4xl lg:text-5xl font-bold text-gray-900 mt-4 mb-6">
+              <span className="text-sm font-bold text-yellow-600 tracking-wider uppercase bg-yellow-100 px-4 py-2 rounded-full">Get In Touch</span>
+              <h2 className="text-5xl lg:text-6xl font-black text-[#172455] mt-6 mb-8 leading-tight">
                 Let's Create Something Amazing Together
               </h2>
-              <p className="text-xl text-gray-600">
-                Ready to elevate your next event? Contact us today for a quote or consultation.
+              <div className="h-2 w-24 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full mb-8"></div>
+              <p className="text-xl text-gray-700 font-medium">
+                Ready to elevate your next event? <span className="text-[#172455] font-bold">Contact us today</span> for a quote or consultation.
               </p>
             </div>
 
             <div className="space-y-6">
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <MapPin className="text-yellow-600" size={24} />
+              <div className="flex items-start space-x-5 group">
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <MapPin className="text-white" size={28} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Location</h3>
-                  <p className="text-gray-600">Paa ya Paa Lane, Off Ridgeways Road<br />Nairobi, Kenya</p>
+                  <h3 className="font-black text-[#172455] mb-2 text-lg">Location</h3>
+                  <p className="text-gray-700 font-medium">Paa ya Paa Lane, Off Ridgeways Road<br />Nairobi, Kenya</p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Phone className="text-yellow-600" size={24} />
+              <div className="flex items-start space-x-5 group">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#172455] to-[#1e3a8a] rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Phone className="text-yellow-400" size={28} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Phone</h3>
-                  <p className="text-gray-600">+254 729 171 351</p>
+                  <h3 className="font-black text-[#172455] mb-2 text-lg">Phone</h3>
+                  <p className="text-gray-700 font-medium">+254 729 171 351</p>
                 </div>
               </div>
 
-              <div className="flex items-start space-x-4">
-                <div className="w-12 h-12 bg-yellow-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Mail className="text-yellow-600" size={24} />
+              <div className="flex items-start space-x-5 group">
+                <div className="w-16 h-16 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Mail className="text-white" size={28} />
                 </div>
                 <div>
-                  <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                  <p className="text-gray-600">info@stagepass.co.ke</p>
+                  <h3 className="font-black text-[#172455] mb-2 text-lg">Email</h3>
+                  <p className="text-gray-700 font-medium">info@stagepass.co.ke</p>
+                </div>
+              </div>
+
+              <div className="flex items-start space-x-5 group">
+                <div className="w-16 h-16 bg-gradient-to-br from-[#172455] to-[#1e3a8a] rounded-2xl flex items-center justify-center flex-shrink-0 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Clock className="text-yellow-400" size={28} />
+                </div>
+                <div>
+                  <h3 className="font-black text-[#172455] mb-2 text-lg">Business Hours</h3>
+                  <p className="text-gray-700 font-medium">Mon - Fri: 9:00 AM - 6:00 PM<br />Sat: 10:00 AM - 4:00 PM</p>
                 </div>
               </div>
             </div>
           </div>
 
           {/* Right - Contact Form */}
-          <div className="bg-white rounded-3xl shadow-2xl p-8 lg:p-12 border border-gray-100">
+          <div className="bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-10 lg:p-14 border-2 border-gray-100 animate-fade-in-right">
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+                <label className="block text-sm font-bold text-[#172455] mb-3">Full Name</label>
                 <Input
                   type="text"
                   name="name"
@@ -88,12 +103,12 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder="John Doe"
                   required
-                  className="w-full"
+                  className="w-full h-14 text-base border-2 border-gray-200 focus:border-yellow-500 rounded-xl"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Email Address</label>
+                <label className="block text-sm font-bold text-[#172455] mb-3">Email Address</label>
                 <Input
                   type="email"
                   name="email"
@@ -101,12 +116,12 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder="john@example.com"
                   required
-                  className="w-full"
+                  className="w-full h-14 text-base border-2 border-gray-200 focus:border-yellow-500 rounded-xl"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
+                <label className="block text-sm font-bold text-[#172455] mb-3">Phone Number</label>
                 <Input
                   type="tel"
                   name="phone"
@@ -114,28 +129,29 @@ const Contact = () => {
                   onChange={handleChange}
                   placeholder="+254 700 000 000"
                   required
-                  className="w-full"
+                  className="w-full h-14 text-base border-2 border-gray-200 focus:border-yellow-500 rounded-xl"
                 />
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Message</label>
+                <label className="block text-sm font-bold text-[#172455] mb-3">Message</label>
                 <Textarea
                   name="message"
                   value={formData.message}
                   onChange={handleChange}
                   placeholder="Tell us about your event..."
-                  rows={4}
+                  rows={5}
                   required
-                  className="w-full"
+                  className="w-full text-base border-2 border-gray-200 focus:border-yellow-500 rounded-xl"
                 />
               </div>
 
               <Button
                 type="submit"
-                className="w-full bg-yellow-500 hover:bg-yellow-600 text-white py-6 text-lg rounded-full shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105"
+                className="w-full bg-gradient-to-r from-[#172455] to-[#1e3a8a] hover:from-[#0f1b3d] hover:to-[#172455] text-white py-7 text-lg rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 hover:scale-105 font-bold group"
               >
-                Send Message <Send className="ml-2 h-5 w-5" />
+                Send Message 
+                <Send className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
               </Button>
             </form>
           </div>
