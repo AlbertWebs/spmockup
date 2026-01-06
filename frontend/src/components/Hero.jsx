@@ -61,16 +61,16 @@ const Hero = () => {
               
               {/* Floating icons */}
               <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center animate-float">
-                <span className="text-2xl">🎬</span>
+                <Video className="text-yellow-600" size={28} />
               </div>
               <div className="absolute bottom-0 right-0 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center animate-float delay-500">
-                <span className="text-2xl">🎤</span>
+                <Mic className="text-yellow-600" size={28} />
               </div>
               <div className="absolute top-1/4 right-0 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center animate-float delay-1000">
-                <span className="text-2xl">💡</span>
+                <Lightbulb className="text-yellow-600" size={28} />
               </div>
               <div className="absolute top-1/2 left-0 w-16 h-16 bg-white rounded-full shadow-lg flex items-center justify-center animate-float delay-1500">
-                <span className="text-2xl">🎵</span>
+                <Music className="text-yellow-600" size={28} />
               </div>
             </div>
           </div>
