@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from './ui/button';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Mic, Music, Lightbulb, Video } from 'lucide-react';
 
 const Hero = () => {
   return (
