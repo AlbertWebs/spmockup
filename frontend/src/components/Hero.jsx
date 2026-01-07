@@ -1,94 +1,63 @@
-import React from 'react';
-import { Button } from './ui/button';
-import { ArrowRight, Mic, Music, Lightbulb, Video, Sparkles } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
 
 const Hero = () => {
+  const [typedText, setTypedText] = useState("");
+  const [textVisible, setTextVisible] = useState(false); 
+  const [textDimmed, setTextDimmed] = useState(false); // New state for dimming text
+  const fullText = "WWe Create the Most Engaging Events in the World Using Technology";
+
+  useEffect(() => {
+    let typeTimeout;
+    let dimmingTimeout; // New timeout for dimming
+
+    const startTyping = setTimeout(() => {
+      setTextVisible(true); 
+      let i = 0;
+      typeTimeout = setInterval(() => {
+        if (i < fullText.length) {
+          setTypedText(prev => prev + fullText.charAt(i));
+          i++;
+        } else {
+          clearInterval(typeTimeout);
+          // Start dimming after typing is complete
+          dimmingTimeout = setTimeout(() => {
+            setTextDimmed(true);
+          }, 5000); // 5 seconds after typing is complete
+        }
+      }, 70); // Typing speed in ms per character
+    }, 200); 
+
+    return () => {
+      clearTimeout(startTyping);
+      clearInterval(typeTimeout);
+      clearTimeout(dimmingTimeout); // Clear dimming timeout on unmount
+    };
+  }, []);
   return (
-    <section className="relative min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-blue-50 to-yellow-50 overflow-hidden pt-24">
-      {/* Animated background elements */}
-      <div className="absolute top-20 right-10 w-96 h-96 bg-yellow-200 rounded-full blur-3xl opacity-40 animate-pulse-slow"></div>
-      <div className="absolute bottom-20 left-10 w-[500px] h-[500px] bg-[#172455] rounded-full blur-3xl opacity-10 animate-pulse-slower"></div>
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-r from-yellow-100 to-blue-100 rounded-full blur-3xl opacity-20 animate-spin-very-slow"></div>
-      
-      <div className="container mx-auto px-6 lg:px-12 relative z-10">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          {/* Left Content */}
-          <div className="space-y-8">
-            <div className="inline-flex items-center space-x-2 animate-fade-in-up">
-              <Sparkles className="text-yellow-500 animate-spin-slow" size={24} />
-              <span className="text-sm font-bold text-[#172455] tracking-wider uppercase bg-gradient-to-r from-yellow-100 to-yellow-200 px-6 py-3 rounded-full shadow-md">
-                Creative Solutions • Technical Excellence
-              </span>
-            </div>
-            
-            <h1 className="text-4xl lg:text-6xl font-black leading-tight">
-              <span className="block text-[#172455] animate-slide-in-left">
-                We Create the Most
-              </span>
-              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 via-yellow-600 to-yellow-500 mt-4 animate-scale-in bg-[length:200%_100%] animate-gradient-x animation-delay-400">
-                Engaging Events
-              </span>
-              <span className="block text-gray-700 text-3xl lg:text-4xl mt-6 font-bold animate-slide-in-right animation-delay-800">
-                in the World Using Technology
-              </span>
-            </h1>
-            
-            <p className="text-xl text-gray-700 leading-relaxed max-w-xl font-medium animate-fade-in-up animation-delay-600">
-              From concept to set-up to on-site support, we are there every step of the way to provide you with <span className="text-[#172455] font-bold">exceptional product and service</span>.
-            </p>
-            
-            <div className="flex flex-wrap gap-4 animate-fade-in-up animation-delay-800">
-              <Button size="lg" className="bg-gradient-to-r from-[#172455] to-[#1e3a8a] hover:from-[#0f1b3d] hover:to-[#172455] text-white px-10 py-7 text-lg rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 hover:scale-110 font-bold group">
-                Our Work 
-                <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
-              </Button>
-              <Button size="lg" variant="outline" className="border-3 border-[#172455] text-[#172455] hover:bg-[#172455] hover:text-white px-10 py-7 text-lg rounded-full transition-all duration-300 hover:scale-105 font-bold shadow-lg">
-                Learn More
-              </Button>
-            </div>
-          </div>
-          
-          {/* Right Content - Enhanced Circular Graphic */}
-          <div className="relative flex items-center justify-center animate-fade-in-right">
-            <div className="relative w-full max-w-lg aspect-square">
-              {/* Animated circles */}
-              <div className="absolute inset-0 rounded-full border-8 border-yellow-400 opacity-30 animate-spin-slow"></div>
-              <div className="absolute inset-4 rounded-full border-6 border-[#172455] opacity-20 animate-spin-slower"></div>
-              <div className="absolute inset-8 rounded-full border-4 border-yellow-500 opacity-40 animate-spin-reverse"></div>
-              
-              {/* Center logo area */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-56 h-56 rounded-full bg-gradient-to-br from-[#172455] via-[#1e3a8a] to-[#172455] flex items-center justify-center shadow-2xl animate-pulse-glow p-12">
-                  <img 
-                    src="https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png" 
-                    alt="StagePass Logo" 
-                    className="w-full h-auto object-contain brightness-0 invert"
-                  />
-                </div>
-              </div>
-              
-              {/* Floating icons with enhanced animation */}
-              <div className="absolute top-0 left-1/2 transform -translate-x-1/2 -translate-y-4 w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-2xl flex items-center justify-center animate-float-enhanced">
-                <Video className="text-white" size={32} />
-              </div>
-              <div className="absolute bottom-0 right-0 w-20 h-20 bg-gradient-to-br from-[#172455] to-[#1e3a8a] rounded-full shadow-2xl flex items-center justify-center animate-float-enhanced animation-delay-500">
-                <Mic className="text-yellow-400" size={32} />
-              </div>
-              <div className="absolute top-1/4 right-0 w-20 h-20 bg-gradient-to-br from-yellow-400 to-yellow-600 rounded-full shadow-2xl flex items-center justify-center animate-float-enhanced animation-delay-1000">
-                <Lightbulb className="text-white" size={32} />
-              </div>
-              <div className="absolute top-1/2 left-0 w-20 h-20 bg-gradient-to-br from-[#172455] to-[#1e3a8a] rounded-full shadow-2xl flex items-center justify-center animate-float-enhanced animation-delay-1500">
-                <Music className="text-yellow-400" size={32} />
-              </div>
-            </div>
-          </div>
-        </div>
+    <section className="relative h-[50vh] md:h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white">
+      {/* Background Image */}
+      <div className="absolute inset-0 z-0">
+        <video
+          src="https://stagepass.co.ke/uploads/video/ceo.mp4"
+          loop
+          autoPlay
+          muted
+          className="w-full h-full object-cover"
+        />
+        <div className="absolute inset-0 bg-black opacity-50"></div> {/* Dark overlay */}
       </div>
-      
-      {/* Enhanced Rainbow gradient bar with animation */}
-      <div className="absolute bottom-0 left-0 right-0 h-3 bg-gradient-to-r from-blue-500 via-purple-500 via-pink-500 via-red-500 via-orange-500 via-yellow-500 to-green-500 animate-gradient-x"></div>
+
+      {/* Content */}
+      <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 transition-opacity duration-1000 ${textVisible ? (textDimmed ? 'opacity-25' : 'opacity-100') : 'opacity-0'}`}>
+        <h1
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none mb-6 text-white uppercase"
+        >
+          {typedText}
+        </h1>
+      </div>
     </section>
   );
 };
 
 export default Hero;
+

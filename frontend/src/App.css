@@ -205,6 +205,15 @@ html {
     }
 }
 
+@keyframes border-pulse {
+    0%, 100% {
+        border-color: rgba(250, 204, 21, 0.7);
+    }
+    50% {
+        border-color: rgba(250, 204, 21, 1);
+    }
+}
+
 .animate-fade-in {
     animation: fade-in 0.6s ease-out;
 }
@@ -280,6 +289,10 @@ html {
 
 .animate-scale-in {
     animation: scale-in 1s ease-out;
+}
+
+.animate-border-pulse {
+    animation: border-pulse 2s infinite ease-in-out;
 }
 
 .animation-delay-200 {
