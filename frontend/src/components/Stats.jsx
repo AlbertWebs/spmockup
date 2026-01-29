@@ -1,51 +1,64 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Package, Users, Calendar } from 'lucide-react';
 
-const Stats = () => {
-  const stats = [
-    {
-      icon: <Package className="w-14 h-14" />,
-      value: '43,234',
-      label: 'AV Equipment',
-    },
-    {
-      icon: <Users className="w-14 h-14" />,
-      value: '421',
-      label: 'Happy Clients',
-    },
-    {
-      icon: <Calendar className="w-14 h-14" />,
-      value: '2,362',
-      label: 'Events',
-    },
-  ];
+const Stats = ({ data }) => {
+  const section = data?.section;
+  const iconMap = {
+    Package,
+    Users,
+    Calendar,
+  };
+
+  const stats = useMemo(() => {
+    if (data?.items?.length) {
+      return data.items.map((item) => {
+        const Icon = iconMap[item.icon] || Package;
+        return {
+          ...item,
+          icon: <Icon className="w-14 h-14" />,
+        };
+      });
+    }
+    return [
+      {
+        icon: <Package className="w-14 h-14" />,
+        value: '43,234',
+        label: 'AV Equipment',
+      },
+      {
+        icon: <Users className="w-14 h-14" />,
+        value: '421',
+        label: 'Happy Clients',
+      },
+      {
+        icon: <Calendar className="w-14 h-14" />,
+        value: '2,362',
+        label: 'Events',
+      },
+    ];
+  }, [data]);
+
+  const backgroundVideo = section?.background_video_url || '';
 
 return (<section className="py-16 h-[50vh] md:h-screen relative overflow-hidden text-white">
 
   {/* 🔹 Background Video */}
-  <video
-    className="absolute inset-0 w-full h-full object-cover"
-    src="https://stagepass.co.ke/uploads/video/sharks.mp4"
-    autoPlay
-    loop
-    muted
-    playsInline
-  />
+  {backgroundVideo && (
+    <video
+      className="absolute inset-0 w-full h-full object-cover"
+      src={backgroundVideo}
+      autoPlay
+      loop
+      muted
+      playsInline
+    />
+  )}
 
   {/* 🔹 Optional dark overlay for contrast */}
   <div className="absolute inset-0 bg-[#172455]/70"></div>
 
   {/* 🔹 Main Content */}
   <div className="container mx-auto px-6 lg:px-12 relative z-10">
-    <div className="text-center mb-20 animate-fade-in-up">
-      <h2 className="text-3xl md:text-4xl lg:text-5xl font-black mb-4 leading-tight">
-        Sound reinforcement for <span className="text-yellow-400">70,000 pax</span> during
-      </h2>
-      <p className="text-xl md:text-3xl lg:text-4xl font-bold text-yellow-400">
-        EVERTON VS KARIOBANGI SHARKS Football Match
-      </p>
-    </div>
-
     <div className="grid md:grid-cols-3 gap-12 hidden md:grid">
       {stats.map((stat, index) => (
         <div

@@ -1,11 +1,77 @@
-import React from 'react';
+import React, { useMemo, useState } from 'react';
+import { Link, useLocation } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ArrowUp, Sparkles } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
+import QuoteFormModal from './QuoteFormModal';
 
-const Footer = () => {
+const Footer = ({ data }) => {
+  const location = useLocation();
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
+  const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
+  const isHomepage = location.pathname === '/';
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const section = data?.section;
+  const socialLinks = useMemo(() => (
+    data?.social_links?.length
+      ? data.social_links
+      : [
+          { platform: 'Facebook', url: '#' },
+          { platform: 'Twitter', url: '#' },
+          { platform: 'Instagram', url: '#' },
+          { platform: 'Linkedin', url: '#' },
+          { platform: 'Youtube', url: '#' },
+        ]
+  ), [data]);
+
+  // Quick Links - use page routes if not on homepage, otherwise use anchor links
+  const quickLinks = isHomepage && data?.quick_links?.length
+    ? data.quick_links.map(link => ({
+        ...link,
+        isPage: link.href?.startsWith('/') || false,
+      }))
+    : [
+        { label: 'About Us', href: isHomepage ? '#about' : '/about', isPage: !isHomepage },
+        { label: 'Services', href: isHomepage ? '#services' : '/services', isPage: !isHomepage },
+        { label: 'Our Work', href: isHomepage ? '#portfolio' : '/our-work', isPage: !isHomepage },
+        { label: 'Industries', href: isHomepage ? '#industries' : '/industries', isPage: !isHomepage },
+        { label: 'Contact', href: isHomepage ? '#contact' : '/contact', isPage: !isHomepage },
+      ];
+
+  // Resources links - always use these specific links
+  const moreLinks = [
+    { label: 'Terms & Conditions', href: '/terms-and-conditions', isPage: true },
+    { label: 'Privacy Policy', href: '/privacy', isPage: true },
+    { label: 'Sitemap', href: '/sitemap', isPage: true },
+    { label: 'Get AV Quote', href: '#quote', isPage: false, isQuote: true },
+  ];
+
+  const serviceItems = data?.service_items?.length
+    ? data.service_items
+    : [
+        { label: 'Full Production' },
+        { label: 'Visual & Screens' },
+        { label: 'Staging Services' },
+        { label: 'Lighting Design' },
+        { label: 'Audio Systems' },
+        { label: 'Equipment Rentals' },
+      ];
+
+  const logoUrl = section?.logo_url || 'https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png';
+  const description = section?.description
+    || "Africa's premier audio-visual and event technology provider, delivering excellence through innovation and expertise.";
+  const currentYear = new Date().getFullYear();
+  const copyright = section?.copyright
+    || `© ${currentYear} StagePass Audio Visual Limited. All rights reserved. | Creative Solutions | Technical Excellence`;
+
+  const iconMap = {
+    Facebook,
+    Twitter,
+    Instagram,
+    Linkedin,
+    Youtube,
   };
 
   return (
@@ -22,29 +88,26 @@ const Footer = () => {
           {/* Column 1 - Brand */}
           <div className="space-y-6">
             <img 
-              src="https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png" 
+              src={logoUrl}
               alt="StagePass Logo" 
               className="h-12 w-auto object-contain brightness-0 invert"
             />
             <p className="text-gray-300 text-sm leading-relaxed font-medium">
-              Africa's premier audio-visual and event technology provider, delivering excellence through innovation and expertise.
+              {description}
             </p>
             <div className="flex space-x-3">
-              <a href="#" className="w-12 h-12 bg-white/10 hover:bg-gradient-to-br hover:from-yellow-400 hover:to-yellow-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group">
-                <Facebook size={20} className="group-hover:text-white" />
-              </a>
-              <a href="#" className="w-12 h-12 bg-white/10 hover:bg-gradient-to-br hover:from-yellow-400 hover:to-yellow-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group">
-                <Twitter size={20} className="group-hover:text-white" />
-              </a>
-              <a href="#" className="w-12 h-12 bg-white/10 hover:bg-gradient-to-br hover:from-yellow-400 hover:to-yellow-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group">
-                <Instagram size={20} className="group-hover:text-white" />
-              </a>
-              <a href="#" className="w-12 h-12 bg-white/10 hover:bg-gradient-to-br hover:from-yellow-400 hover:to-yellow-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group">
-                <Linkedin size={20} className="group-hover:text-white" />
-              </a>
-              <a href="#" className="w-12 h-12 bg-white/10 hover:bg-gradient-to-br hover:from-yellow-400 hover:to-yellow-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group">
-                <Youtube size={20} className="group-hover:text-white" />
-              </a>
+              {socialLinks.map((link, index) => {
+                const Icon = iconMap[link.platform] || Sparkles;
+                return (
+                  <a
+                    key={index}
+                    href={link.url}
+                    className="w-12 h-12 bg-white/10 hover:bg-gradient-to-br hover:from-yellow-400 hover:to-yellow-600 rounded-full flex items-center justify-center transition-all duration-300 hover:scale-110 group"
+                  >
+                    <Icon size={20} className="group-hover:text-white" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -52,22 +115,46 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-black mb-6 text-yellow-400">Quick Links</h3>
             <ul className="space-y-3">
-              <li><a href="#home" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Home</a></li>
-              <li><a href="#about" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> About Us</a></li>
-              <li><a href="#services" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Services</a></li>
-              <li><a href="#portfolio" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Our Work</a></li>
-              <li><a href="#contact" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Contact</a></li>
+              {quickLinks.map((link, index) => (
+                <li key={index}>
+                  {link.isPage ? (
+                    <Link to={link.href} className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center">
+                      <span className="mr-2">→</span> {link.label}
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center">
+                      <span className="mr-2">→</span> {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 
-          {/* Column 3 - More Links */}
+          {/* Column 3 - Resources */}
           <div>
-            <h3 className="text-xl font-black mb-6 text-yellow-400">More Links</h3>
+            <h3 className="text-xl font-black mb-6 text-yellow-400">Resources</h3>
             <ul className="space-y-3">
-              <li><a href="#industries" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Industries</a></li>
-              <li><a href="#clients" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Clients</a></li>
-              <li><a href="#testimonials" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Testimonials</a></li>
-              <li><a href="#blog" className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center"><span className="mr-2">→</span> Blog</a></li>
+              {moreLinks.map((link, index) => (
+                <li key={index}>
+                  {link.isQuote ? (
+                    <button
+                      onClick={() => setIsQuoteModalOpen(true)}
+                      className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center w-full text-left"
+                    >
+                      <span className="mr-2">→</span> {link.label}
+                    </button>
+                  ) : link.isPage ? (
+                    <Link to={link.href} className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center">
+                      <span className="mr-2">→</span> {link.label}
+                    </Link>
+                  ) : (
+                    <a href={link.href} className="text-gray-300 hover:text-yellow-400 transition-colors font-medium flex items-center">
+                      <span className="mr-2">→</span> {link.label}
+                    </a>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -75,12 +162,11 @@ const Footer = () => {
           <div>
             <h3 className="text-xl font-black mb-6 text-yellow-400">Our Services</h3>
             <ul className="space-y-3">
-              <li className="text-gray-300 font-medium text-sm flex items-center"><Sparkles size={16} className="mr-2 text-yellow-400" /> Full Production</li>
-              <li className="text-gray-300 font-medium text-sm flex items-center"><Sparkles size={16} className="mr-2 text-yellow-400" /> Visual & Screens</li>
-              <li className="text-gray-300 font-medium text-sm flex items-center"><Sparkles size={16} className="mr-2 text-yellow-400" /> Staging Services</li>
-              <li className="text-gray-300 font-medium text-sm flex items-center"><Sparkles size={16} className="mr-2 text-yellow-400" /> Lighting Design</li>
-              <li className="text-gray-300 font-medium text-sm flex items-center"><Sparkles size={16} className="mr-2 text-yellow-400" /> Audio Systems</li>
-              <li className="text-gray-300 font-medium text-sm flex items-center"><Sparkles size={16} className="mr-2 text-yellow-400" /> Equipment Rentals</li>
+              {serviceItems.map((item, index) => (
+                <li key={index} className="text-gray-300 font-medium text-sm flex items-center">
+                  <Sparkles size={16} className="mr-2 text-yellow-400" /> {item.label}
+                </li>
+              ))}
             </ul>
           </div>
 
@@ -89,7 +175,7 @@ const Footer = () => {
         {/* Copyright */}
         <div className={`pt-8 border-t border-white/10 text-center ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`} style={{ transitionDelay: '300ms' }}>
           <div className="text-gray-400 text-sm font-medium">
-            © 2025 StagePass Audio Visual Limited. All rights reserved. | Creative Solutions | Technical Excellence
+            {copyright}
           </div>
         </div>
       </div>
@@ -101,6 +187,12 @@ const Footer = () => {
       >
         <ArrowUp size={28} className="font-bold group-hover:-translate-y-1 transition-transform" />
       </button>
+
+      {/* Quote Form Modal */}
+      <QuoteFormModal
+        isOpen={isQuoteModalOpen}
+        onClose={() => setIsQuoteModalOpen(false)}
+      />
     </footer>
   );
 };

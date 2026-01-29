@@ -1,26 +1,44 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo, useRef, useState, useEffect } from 'react';
 
-const Hero = () => {
+const Hero = ({ data }) => {
   const [typedText, setTypedText] = useState("");
   const [textVisible, setTextVisible] = useState(false); 
   const [textDimmed, setTextDimmed] = useState(false); // New state for dimming text
-  const fullText = "WWe Create the Most Engaging Events in the World Using Technology";
+  const typingRef = useRef(null);
+  const dimmingRef = useRef(null);
+  const startRef = useRef(null);
+  const fullText = useMemo(
+    () => data?.headline || "We Create the Most Engaging Events in the World Using Technology",
+    [data]
+  );
+  const backgroundVideo = data?.background_video_url || "https://stagepass.co.ke/uploads/video/ceo.mp4";
 
   useEffect(() => {
-    let typeTimeout;
-    let dimmingTimeout; // New timeout for dimming
+    if (startRef.current) {
+      clearTimeout(startRef.current);
+    }
+    if (typingRef.current) {
+      clearInterval(typingRef.current);
+    }
+    if (dimmingRef.current) {
+      clearTimeout(dimmingRef.current);
+    }
 
-    const startTyping = setTimeout(() => {
+    setTypedText("");
+    setTextVisible(false);
+    setTextDimmed(false);
+
+    startRef.current = setTimeout(() => {
       setTextVisible(true); 
       let i = 0;
-      typeTimeout = setInterval(() => {
+      typingRef.current = setInterval(() => {
         if (i < fullText.length) {
           setTypedText(prev => prev + fullText.charAt(i));
           i++;
         } else {
-          clearInterval(typeTimeout);
+          clearInterval(typingRef.current);
           // Start dimming after typing is complete
-          dimmingTimeout = setTimeout(() => {
+          dimmingRef.current = setTimeout(() => {
             setTextDimmed(true);
           }, 5000); // 5 seconds after typing is complete
         }
@@ -28,17 +46,17 @@ const Hero = () => {
     }, 200); 
 
     return () => {
-      clearTimeout(startTyping);
-      clearInterval(typeTimeout);
-      clearTimeout(dimmingTimeout); // Clear dimming timeout on unmount
+      clearTimeout(startRef.current);
+      clearInterval(typingRef.current);
+      clearTimeout(dimmingRef.current); // Clear dimming timeout on unmount
     };
-  }, []);
+  }, [fullText]);
   return (
-    <section className="relative h-[50vh] md:h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white">
+    <section className="relative h-[56.25vw] md:h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white -mt-[4.25rem] md:mt-0" style={{ paddingTop: '4.25rem', minHeight: 'calc(100vh - 10rem)' }}>
       {/* Background Image */}
       <div className="absolute inset-0 z-0">
         <video
-          src="https://stagepass.co.ke/uploads/video/ceo.mp4"
+          src={backgroundVideo}
           loop
           autoPlay
           muted
