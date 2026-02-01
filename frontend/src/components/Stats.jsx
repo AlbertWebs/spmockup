@@ -3,11 +3,11 @@ import { Package, Users, Calendar } from 'lucide-react';
 
 const Stats = ({ data }) => {
   const section = data?.section;
-  const iconMap = {
+  const iconMap = useMemo(() => ({
     Package,
     Users,
     Calendar,
-  };
+  }), []);
 
   const stats = useMemo(() => {
     if (data?.items?.length) {
@@ -36,7 +36,7 @@ const Stats = ({ data }) => {
         label: 'Events',
       },
     ];
-  }, [data]);
+  }, [data, iconMap]);
 
   const backgroundVideo = section?.background_video_url || '';
 

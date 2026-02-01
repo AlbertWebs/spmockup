@@ -39,7 +39,7 @@ const IndustryCard = ({ title, icon: Icon, iconUrl }) => {
 const Industries = ({ data }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
   const section = data?.section;
-  const iconMap = {
+  const iconMap = useMemo(() => ({
     Concerts: Music,
     'Corporate Events': Building2,
     Fashion: Palette,
@@ -48,7 +48,7 @@ const Industries = ({ data }) => {
     'Trade shows': Clapperboard,
     'Sporting Events': Trophy,
     'Nonprofit Events': Handshake,
-  };
+  }), []);
 
   const industryData = useMemo(() => {
     if (data?.items?.length) {
@@ -94,7 +94,7 @@ const Industries = ({ data }) => {
         icon: Handshake,
       },
     ];
-  }, [data]);
+  }, [data, iconMap]);
 
   const title = section?.title || 'Our Industries';
   const subtitle = section?.subtitle || 'StagePass Audio Visual serves a diverse range of industries with tailored solutions.';

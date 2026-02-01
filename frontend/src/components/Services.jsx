@@ -6,7 +6,7 @@ const Services = ({ data }) => {
   const [capabilitiesRef, capabilitiesIsVisible] = useOnScreen({ threshold: 0.1 });
   const [peopleRef, peopleIsVisible] = useOnScreen({ threshold: 0.1 });
   const section = data?.section;
-  const iconMap = {
+  const iconMap = useMemo(() => ({
     Box,
     Monitor,
     Radio,
@@ -16,7 +16,7 @@ const Services = ({ data }) => {
     Volume2,
     PenTool,
     Package,
-  };
+  }), []);
 
   const services = useMemo(() => {
     if (data?.items?.length) {
@@ -84,7 +84,7 @@ const Services = ({ data }) => {
         gradient: 'from-yellow-400 to-yellow-600',
       },
     ];
-  }, [data]);
+  }, [data, iconMap]);
 
   const badgeLabel = section?.badge_label || 'Our Capabilities';
   const title = section?.title || 'One-Stop-Solution For All Your AV Services';

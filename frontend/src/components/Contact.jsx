@@ -30,12 +30,12 @@ const Contact = ({ data }) => {
   };
 
   const section = data?.section;
-  const iconMap = {
+  const iconMap = useMemo(() => ({
     MapPin,
     Phone,
     Mail,
     Clock,
-  };
+  }), []);
 
   const details = useMemo(() => {
     if (data?.details?.length) {
@@ -79,7 +79,7 @@ const Contact = ({ data }) => {
         iconColor: 'text-yellow-400',
       },
     ];
-  }, [data]);
+  }, [data, iconMap]);
 
   const badgeLabel = section?.badge_label || 'Get In Touch';
   const title = section?.title || "Let's Create Something Amazing Together";

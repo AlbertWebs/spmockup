@@ -2,17 +2,17 @@ import React, { useMemo, useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, Info, Briefcase, Camera, Mail } from 'lucide-react';
 
+const iconMap = {
+  Home,
+  Info,
+  Briefcase,
+  Camera,
+  Mail,
+};
+
 const BottomNavbar = ({ data, isPage = false }) => {
   const location = useLocation();
   const [activeLink, setActiveLink] = useState('#home');
-
-  const iconMap = {
-    Home,
-    Info,
-    Briefcase,
-    Camera,
-    Mail,
-  };
 
   // Page links mapping for non-homepage pages
   const pageLinksMap = {
