@@ -58,8 +58,8 @@ return (<section className="py-16 h-[50vh] md:h-screen relative overflow-hidden 
   <div className="absolute inset-0 bg-[#172455]/70"></div>
 
   {/* 🔹 Main Content */}
-  <div className="container mx-auto px-6 lg:px-12 relative z-10">
-    <div className="grid md:grid-cols-3 gap-12 hidden md:grid">
+  <div className="container mx-auto px-6 lg:px-12 relative z-10 h-full flex items-center justify-center">
+    <div className="grid md:grid-cols-3 gap-12 hidden md:grid w-full">
       {stats.map((stat, index) => (
         <div
           key={index}
