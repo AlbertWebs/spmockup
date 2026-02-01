@@ -4,6 +4,7 @@ import YouTubeModal from './YouTubeModal';
 import ImageModal from './ImageModal'; // Import the new ImageModal component
 import VideoModal from './VideoModal';
 import useOnScreen from '../hooks/useOnScreen';
+import { API_BASE_URL } from '../config/api';
 
 const Portfolio = ({ data, portfolioSource }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
@@ -20,9 +21,6 @@ const Portfolio = ({ data, portfolioSource }) => {
   const [isLoadingInstagram, setIsLoadingInstagram] = useState(false);
   const [instagramError, setInstagramError] = useState('');
 
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
-    || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://stagepassapi.designekta.com');
-
   useEffect(() => {
     if (portfolioSource !== 'instagram') {
       return;
@@ -35,7 +33,7 @@ const Portfolio = ({ data, portfolioSource }) => {
       try {
         setIsLoadingInstagram(true);
         setInstagramError('');
-        const response = await fetch(`${baseUrl}/api/portfolio/instagram?limit=50`, {
+        const response = await fetch(`${API_BASE_URL}/api/portfolio/instagram?limit=50`, {
           signal: controller.signal,
         });
         if (!response.ok) {
@@ -62,7 +60,7 @@ const Portfolio = ({ data, portfolioSource }) => {
       isMounted = false;
       controller.abort();
     };
-  }, [portfolioSource, baseUrl]);
+  }, [portfolioSource]);
 
   const instagramGallery = useMemo(() => {
     const videos = instagramItems.filter((item) => item.media_type === 'VIDEO').slice(0, 12);
@@ -94,67 +92,67 @@ const Portfolio = ({ data, portfolioSource }) => {
     return [
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/1.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/1.jpg`,
         title: 'Corporate Event 2024',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/2.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/2.jpg`,
         title: 'Concert Production',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/3.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/3.jpg`,
         title: 'Festival Setup',
       },
       {
         type: 'video',
-        thumbnail: `${baseUrl}/uploads/portfolio/4.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/4.jpg`,
         title: 'Stage Lighting Design',
         youtube_id: 'sJSNvegZDoI',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/5.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/5.jpg`,
         title: 'Audio Visual Setup',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/6.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/6.jpg`,
         title: 'Conference Production',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/7.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/7.jpg`,
         title: 'Exhibition Event',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/8.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/8.jpg`,
         title: 'Gala Dinner Setup',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/9.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/9.jpg`,
         title: 'New Portfolio Item 1',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/10.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/10.jpg`,
         title: 'New Portfolio Item 2',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/11.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/11.jpg`,
         title: 'New Portfolio Item 3',
       },
       {
         type: 'image',
-        thumbnail: `${baseUrl}/uploads/portfolio/12.jpg`,
+        thumbnail: `${API_BASE_URL}/uploads/portfolio/12.jpg`,
         title: 'New Portfolio Item 4',
       },
     ];
-  }, [data, instagramGallery, portfolioSource, baseUrl]);
+  }, [data, instagramGallery, portfolioSource]);
 
   const badgeLabel = section?.badge_label || 'Our Work';
   const title = section?.title || 'Portfolio Gallery';

@@ -1,5 +1,6 @@
 import React, { useMemo } from 'react';
 import useOnScreen from '../hooks/useOnScreen';
+import { API_BASE_URL } from '../config/api';
 
 const Clients = ({ data }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
@@ -11,8 +12,6 @@ const Clients = ({ data }) => {
         alt: logo.alt_text || 'Client logo',
       }));
     }
-    const baseUrl = process.env.REACT_APP_API_BASE_URL
-      || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://stagepassapi.designekta.com');
     return [
       "WEB-LOGOS-01.jpg", "WEB-LOGOS-02.jpg", "WEB-LOGOS-03.jpg", "WEB-LOGOS-04.jpg",
       "WEB-LOGOS-05.jpg", "WEB-LOGOS-06.jpg", "WEB-LOGOS-07.jpg", "WEB-LOGOS-08.jpg",
@@ -20,7 +19,7 @@ const Clients = ({ data }) => {
       "WEB-LOGOS-13.jpg", "WEB-LOGOS-14.jpg", "WEB-LOGOS-15.jpg", "WEB-LOGOS-16.jpg",
       "WEB-LOGOS-17.jpg", "WEB-LOGOS-18.jpg", "WEB-LOGOS-19.jpg", "WEB-LOGOS-20.jpg"
     ].map((file) => ({
-      src: `${baseUrl}/uploads/clients/${file}`,
+      src: `${API_BASE_URL}/uploads/clients/${file}`,
       alt: 'Client logo',
     }));
   }, [data]);
@@ -59,17 +58,19 @@ const Clients = ({ data }) => {
             {clientLogos.map((logo, index) => (
               <div
                 key={index}
-                className="bg-white rounded-2xl p-2 flex items-center justify-center hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer border-2 border-gray-100 hover:border-yellow-400 group"
+                className="rounded-2xl p-[3px] bg-gradient-to-br from-yellow-400 via-orange-500 to-yellow-600 hover:from-yellow-300 hover:via-orange-400 hover:to-yellow-500 transition-all duration-500 hover:-translate-y-2 cursor-pointer group"
                 style={{ animationDelay: `${index * 50}ms` }}
               >
-                <div className="w-full h-24 flex items-center justify-center">
-                  <div className="w-full h-full flex items-center justify-center p-0">
-                  <img 
-                    src={logo.src}
-                    alt={logo.alt}
-                    className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                  />
-                </div>
+                <div className="bg-white rounded-2xl p-2 flex items-center justify-center h-full hover:shadow-2xl transition-all duration-500">
+                  <div className="w-full h-24 flex items-center justify-center">
+                    <div className="w-full h-full flex items-center justify-center p-0">
+                      <img 
+                        src={logo.src}
+                        alt={logo.alt}
+                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             ))}

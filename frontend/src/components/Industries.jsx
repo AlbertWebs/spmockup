@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import { Building2, Clapperboard, Gem, Handshake, Music, Palette, Theater, Trophy } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
+import { API_BASE_URL } from '../config/api';
 
 const IndustryCard = ({ title, icon: Icon, iconUrl }) => {
 
@@ -49,16 +50,13 @@ const Industries = ({ data }) => {
     'Nonprofit Events': Handshake,
   };
 
-  const baseUrl = process.env.REACT_APP_API_BASE_URL
-    || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://stagepassapi.designekta.com');
-
   const industryData = useMemo(() => {
     if (data?.items?.length) {
       return data.items.map((item) => ({
         title: item.title,
         icon: iconMap[item.icon_name] || iconMap[item.title] || Building2,
         iconUrl: item.icon_url
-          ? (item.icon_url.startsWith('http') ? item.icon_url : `${baseUrl}${item.icon_url}`)
+          ? (item.icon_url.startsWith('http') ? item.icon_url : `${API_BASE_URL}${item.icon_url}`)
           : null,
       }));
     }
@@ -96,7 +94,7 @@ const Industries = ({ data }) => {
         icon: Handshake,
       },
     ];
-  }, [data, baseUrl]);
+  }, [data]);
 
   const title = section?.title || 'Our Industries';
   const subtitle = section?.subtitle || 'StagePass Audio Visual serves a diverse range of industries with tailored solutions.';

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { API_BASE_URL } from '../config/api';
 
 const usePageData = (endpoint) => {
   const [pageData, setPageData] = useState(null);
@@ -11,9 +12,7 @@ const usePageData = (endpoint) => {
     const loadPageData = async () => {
       try {
         setLoadError('');
-        const baseUrl = process.env.REACT_APP_API_BASE_URL
-          || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://stagepassapi.designekta.com');
-        const response = await fetch(`${baseUrl}/api/content/${endpoint}`, {
+        const response = await fetch(`${API_BASE_URL}/api/content/${endpoint}`, {
           signal: controller.signal,
         });
         if (!response.ok) {

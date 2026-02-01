@@ -23,8 +23,8 @@ const Privacy = () => {
       <div className="pt-28 pb-4">
         <div className="mx-auto max-w-4xl px-6">
           <Breadcrumb items={[{ label: 'Privacy Policy', path: '/privacy' }]} />
-        </div>
-      </div>
+          </div>
+          </div>
       
       <main className="mx-auto max-w-4xl px-6 py-16">
         
