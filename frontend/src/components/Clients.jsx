@@ -12,7 +12,7 @@ const Clients = ({ data }) => {
       }));
     }
     const baseUrl = process.env.REACT_APP_API_BASE_URL
-      || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : '');
+      || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://stagepassapi.designekta.com');
     return [
       "WEB-LOGOS-01.jpg", "WEB-LOGOS-02.jpg", "WEB-LOGOS-03.jpg", "WEB-LOGOS-04.jpg",
       "WEB-LOGOS-05.jpg", "WEB-LOGOS-06.jpg", "WEB-LOGOS-07.jpg", "WEB-LOGOS-08.jpg",

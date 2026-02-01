@@ -12,7 +12,7 @@ const usePageData = (endpoint) => {
       try {
         setLoadError('');
         const baseUrl = process.env.REACT_APP_API_BASE_URL
-          || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : '');
+          || (process.env.NODE_ENV === 'development' ? 'http://localhost:8000' : 'https://stagepassapi.designekta.com');
         const response = await fetch(`${baseUrl}/api/content/${endpoint}`, {
           signal: controller.signal,
         });
