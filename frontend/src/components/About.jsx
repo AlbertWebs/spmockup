@@ -82,7 +82,7 @@ const About = ({ data }) => {
                 {descriptionPrimary}
               </p>
 
-              <p className="text-lg text-gray-700 leading-relaxed">
+              <p className="text-xl text-gray-700 leading-relaxed font-medium">
                 {descriptionSecondary}
               </p>
 
