@@ -23,6 +23,8 @@ import OurWork from './pages/OurWork';
 import IndustriesPage from './pages/Industries';
 import ContactPage from './pages/Contact';
 import Sitemap from './pages/Sitemap';
+import ServicePage from './pages/ServicePage';
+import IndustryPage from './pages/IndustryPage';
 
 const Home = () => {
   const { homepageData, loadError } = useHomepageData();
@@ -82,6 +84,11 @@ function App() {
           <Route path="/privacy" element={<Privacy />} />
           <Route path="/terms-and-conditions" element={<TermsAndConditions />} />
           <Route path="/sitemap" element={<Sitemap />} />
+          {/* Service Pages */}
+          <Route path="/service/:service" element={<ServicePage />} />
+          <Route path="/service/:service/:subservice" element={<ServicePage />} />
+          {/* Industry Pages */}
+          <Route path="/industry/:id" element={<IndustryPage />} />
         </Routes>
       </BrowserRouter>
       <PWAInstallPrompt />
