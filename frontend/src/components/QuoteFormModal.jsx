@@ -1,9 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { X } from 'lucide-react';
 
 const QuoteFormModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     message: '',
     mathAnswer: '',
     honeypot: '', // Honeypot field for spam protection
@@ -14,14 +16,23 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
 
   useEffect(() => {
     if (!isOpen) return;
+    
+    // Prevent body scroll when modal is open
+    document.body.style.overflow = 'hidden';
+    
     setIsLoading(true);
     const a = Math.floor(Math.random() * 8) + 2;
     const b = Math.floor(Math.random() * 8) + 2;
     setMathChallenge({ a, b });
-    setFormData((prev) => ({ ...prev, mathAnswer: '' }));
+    setFormData((prev) => ({ ...prev, mathAnswer: '', phone: '' }));
     setError('');
     const timer = setTimeout(() => setIsLoading(false), 500);
-    return () => clearTimeout(timer);
+    
+    return () => {
+      clearTimeout(timer);
+      // Restore body scroll when modal closes
+      document.body.style.overflow = 'unset';
+    };
   }, [isOpen]);
 
   const handleChange = (e) => {
@@ -53,28 +64,46 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-50 p-4">
-      <div className="bg-white p-8 md:p-10 rounded-3xl shadow-2xl border border-gray-100 w-full max-w-xl mx-4 relative overflow-hidden">
-        <div className="absolute -top-16 -right-16 h-32 w-32 bg-yellow-200/50 rounded-full blur-2xl"></div>
-        <div className="absolute -bottom-16 -left-16 h-32 w-32 bg-blue-200/40 rounded-full blur-2xl"></div>
+    <div 
+      className="fixed inset-0 bg-black/60 backdrop-blur-sm flex justify-center items-center z-[9999] p-4" 
+      style={{ top: 0, left: 0, right: 0, bottom: 0, position: 'fixed' }}
+      onClick={(e) => {
+        // Close modal when clicking outside
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div className="bg-white p-6 md:p-8 rounded-2xl shadow-2xl border border-gray-100 w-full max-w-lg relative" style={{ margin: 'auto' }}>
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 p-1.5 rounded-full hover:bg-gray-100 transition-colors z-10"
+          aria-label="Close modal"
+        >
+          <X className="h-4 w-4 text-gray-500" />
+        </button>
+        
+        <div className="absolute -top-12 -right-12 h-24 w-24 bg-yellow-200/50 rounded-full blur-2xl"></div>
+        <div className="absolute -bottom-12 -left-12 h-24 w-24 bg-blue-200/40 rounded-full blur-2xl"></div>
         <div className="relative">
           {isLoading ? (
-            <div className="flex flex-col items-center justify-center py-16">
-              <div className="h-14 w-14 rounded-full border-4 border-yellow-200 border-t-yellow-500 animate-spin"></div>
-              <p className="mt-4 text-sm font-semibold text-[#172455]">Preparing your quote form...</p>
+            <div className="flex flex-col items-center justify-center py-12">
+              <div className="h-12 w-12 rounded-full border-4 border-yellow-200 border-t-yellow-500 animate-spin"></div>
+              <p className="mt-3 text-sm font-semibold text-[#172455]">Preparing your quote form...</p>
             </div>
           ) : (
             <>
-              <h2 className="text-3xl font-extrabold mb-2 text-center text-[#172455]">Get Your AV Quote</h2>
-              <p className="text-center text-gray-600 mb-8">Tell us about your event and we’ll respond quickly.</p>
-              <form onSubmit={handleSubmit} className="space-y-6">
+              <h2 className="text-2xl font-extrabold mb-1 text-center text-[#172455]">Get Your AV Quote</h2>
+              <p className="text-center text-gray-600 mb-5 text-sm">Tell us about your event and we'll respond quickly.</p>
+              <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
-              <div className="rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+              <div className="rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-xs text-red-700">
                 {error}
               </div>
             )}
           <div>
-            <label htmlFor="name" className="block text-base font-semibold text-[#172455] mb-2">Name</label>
+            <label htmlFor="name" className="block text-sm font-semibold text-[#172455] mb-1.5">Name</label>
             <input
               type="text"
               id="name"
@@ -82,12 +111,12 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
               value={formData.name}
               onChange={handleChange}
                 placeholder="Your full name"
-                className="block w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base transition-all duration-300"
+                className="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm transition-all duration-300"
               required
             />
           </div>
           <div>
-            <label htmlFor="email" className="block text-base font-semibold text-[#172455] mb-2">Email</label>
+            <label htmlFor="email" className="block text-sm font-semibold text-[#172455] mb-1.5">Email</label>
             <input
               type="email"
               id="email"
@@ -95,39 +124,50 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
               value={formData.email}
               onChange={handleChange}
                 placeholder="you@email.com"
-                className="block w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base transition-all duration-300"
+                className="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm transition-all duration-300"
               required
             />
           </div>
           <div>
-            <label htmlFor="message" className="block text-base font-semibold text-[#172455] mb-2">Message</label> {/* Updated label classes */}
+            <label htmlFor="phone" className="block text-sm font-semibold text-[#172455] mb-1.5">Phone Number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              placeholder="+254 700 000 000"
+              className="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm transition-all duration-300"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="message" className="block text-sm font-semibold text-[#172455] mb-1.5">Message</label>
             <textarea
               id="message"
               name="message"
-              rows="5"
+              rows="3"
               value={formData.message}
               onChange={handleChange}
                 placeholder="Tell us about your event..."
-                className="block w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base transition-all duration-300"
+                className="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm transition-all duration-300 resize-none"
               required
             ></textarea>
           </div>
-            <div className="grid gap-4 md:grid-cols-2">
-              <div>
-                <label htmlFor="mathAnswer" className="block text-base font-semibold text-[#172455] mb-2">
-                  Quick check: {mathChallenge.a} + {mathChallenge.b} =
-                </label>
-                <input
-                  type="number"
-                  id="mathAnswer"
-                  name="mathAnswer"
-                  value={formData.mathAnswer}
-                  onChange={handleChange}
-                  className="block w-full px-4 py-3 border-2 border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base transition-all duration-300"
-                  required
-                />
-              </div>
-              <div className="flex items-end text-sm text-gray-500"></div>
+            <div>
+              <label htmlFor="mathAnswer" className="block text-sm font-semibold text-[#172455] mb-1.5">
+                Security: {mathChallenge.a} + {mathChallenge.b} = ?
+              </label>
+              <input
+                type="number"
+                id="mathAnswer"
+                name="mathAnswer"
+                value={formData.mathAnswer}
+                onChange={handleChange}
+                placeholder="Answer"
+                className="block w-full px-3 py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm transition-all duration-300"
+                required
+              />
             </div>
           {/* Honeypot field */}
           <div style={{ display: 'none' }}>
@@ -140,17 +180,17 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
               onChange={handleChange}
             />
           </div>
-            <div className="flex flex-col sm:flex-row justify-end gap-3 mt-6">
+            <div className="flex flex-col sm:flex-row justify-end gap-2.5 mt-4">
               <button
                 type="button"
                 onClick={onClose}
-                className="px-6 py-3 text-base font-semibold text-gray-700 bg-gray-100 rounded-xl hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
+                className="px-5 py-2.5 text-sm font-semibold text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-300"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="px-6 py-3 text-base font-semibold text-white bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-xl hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 shadow-lg"
+                className="px-5 py-2.5 text-sm font-semibold text-white bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-lg hover:from-yellow-600 hover:to-yellow-700 transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-yellow-500 shadow-md"
               >
                 Submit Quote
               </button>
