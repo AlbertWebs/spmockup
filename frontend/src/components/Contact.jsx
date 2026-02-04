@@ -58,7 +58,7 @@ const Contact = () => {
                 </div>
                 <div>
                   <h3 className="font-black text-[#172455] mb-2 text-lg">Location</h3>
-                  <p className="text-gray-700 font-medium">Paa ya Paa Lane, Off Ridgeways Road<br />Nairobi, Kenya</p>
+                  <p className="text-gray-700 font-medium">Jacaranda Close, Ridgeways, <br />Nairobi, Kenya</p>
                 </div>
               </div>
 
