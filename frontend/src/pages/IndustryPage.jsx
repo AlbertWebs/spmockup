@@ -1,36 +1,55 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import BottomNavbar from '../components/BottomNavbar';
 import Breadcrumb from '../components/Breadcrumb';
 import useHomepageData from '../hooks/useHomepageData';
+import { API_BASE_URL } from '../config/api';
 
 const IndustryPage = () => {
   const { id } = useParams();
   const { homepageData } = useHomepageData();
+  const [pageData, setPageData] = useState(null);
+  const [loading, setLoading] = useState(true);
   
-  // Industry content based on ID - you can fetch from API later
-  const getIndustryContent = () => {
-    const industryMap = {
-      '4': {
-        title: 'Industry Services',
-        description: 'We provide comprehensive AV solutions for various industries, ensuring professional and reliable service for your specific industry needs.'
+  useEffect(() => {
+    const fetchIndustryData = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(`${API_BASE_URL}/api/content/industry/${id}`);
+        if (response.ok) {
+          const data = await response.json();
+          setPageData(data.page);
+        }
+      } catch (err) {
+        console.error('Error fetching industry data:', err);
+      } finally {
+        setLoading(false);
       }
     };
 
-    return industryMap[id] || {
-      title: 'Industry Services',
-      description: 'Professional AV solutions tailored to your industry needs.'
-    };
+    fetchIndustryData();
+  }, [id]);
+
+  const content = pageData || {
+    title: 'Industry Services',
+    description: 'Professional AV solutions tailored to your industry needs.'
   };
 
-  const content = getIndustryContent();
   const breadcrumbItems = [
     { label: 'Home', path: '/' },
     { label: 'Industries', path: '/industries' },
     { label: content.title, path: `/industry/${id}` }
   ];
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white flex items-center justify-center">
+        <div className="h-12 w-12 rounded-full border-4 border-yellow-200 border-t-yellow-500 animate-spin"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white">
