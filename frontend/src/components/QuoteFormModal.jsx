@@ -4,6 +4,7 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
+    phone: '',
     message: '',
     honeypot: '', // Honeypot field for spam protection
   });
@@ -55,6 +56,19 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
               value={formData.email}
               onChange={handleChange}
               className="block w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base transition-all duration-300"
+              required
+            />
+          </div>
+          <div>
+            <label htmlFor="phone" className="block text-base font-semibold text-[#172455] mb-2">Phone Number</label>
+            <input
+              type="tel"
+              id="phone"
+              name="phone"
+              value={formData.phone}
+              onChange={handleChange}
+              className="block w-full px-4 py-3 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-base transition-all duration-300"
+              placeholder="+254 700 000 000"
               required
             />
           </div>

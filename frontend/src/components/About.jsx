@@ -3,6 +3,25 @@ import { CheckCircle2, Target, Users, Award } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
 import { Button } from './ui/button';
 
+// Helper function to decode HTML entities and return HTML content
+const decodeHtmlEntities = (text) => {
+  if (!text) return '';
+  // Check if we're in a browser environment
+  if (typeof document !== 'undefined') {
+    const textarea = document.createElement('textarea');
+    textarea.innerHTML = text;
+    return textarea.value;
+  }
+  // Fallback for server-side rendering: use a simple regex-based decoder
+  return text
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&nbsp;/g, ' ');
+};
+
 const About = ({ data }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
   const section = data?.section;
@@ -19,10 +38,15 @@ const About = ({ data }) => {
 
   const badgeLabel = section?.badge_label || 'About Us';
   const title = section?.title || 'Who We Are';
-  const descriptionPrimary = section?.description_primary
-    || 'StagePass Audio-Visual Limited is an integrated technical, consulting, planning, design and implementation provider for professional events based in Nairobi and operating within Africa.';
-  const descriptionSecondary = section?.description_secondary
-    || 'We specialize in rentals of Audio-Visual technology including Sound, Screens, Lighting, Content Management, Digital and Interactive technology and scenic design.';
+  const descriptionPrimary = useMemo(() => {
+    const rawText = section?.description_primary
+      || 'StagePass Audio-Visual Limited is an integrated technical, consulting, planning, design and implementation provider for professional events based in Nairobi and operating within Africa.';
+    return decodeHtmlEntities(rawText);
+  }, [section?.description_primary]);
+  const descriptionSecondary = useMemo(() => {
+    const rawText = section?.description_secondary || '';
+    return decodeHtmlEntities(rawText);
+  }, [section?.description_secondary]);
   const imageUrl = section?.image_url || 'https://stagepass.co.ke/uploads/banners/visionsp.jpg';
   const statValue = section?.stat_value || '2362+';
   const statLabel = section?.stat_label || 'Successful Events';
@@ -81,13 +105,17 @@ const About = ({ data }) => {
                 <div className="h-2 w-24 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full mt-4"></div>
               </div>
 
-              <p className="text-xl text-gray-700 leading-relaxed font-medium">
-                {descriptionPrimary}
-              </p>
+              <div 
+                className="text-xl text-gray-700 leading-relaxed font-medium"
+                dangerouslySetInnerHTML={{ __html: descriptionPrimary }}
+              />
 
-              <p className="text-lg text-gray-700 leading-relaxed">
-                {descriptionSecondary}
-              </p>
+              {descriptionSecondary && (
+                <div 
+                  className="text-lg text-gray-700 leading-relaxed"
+                  dangerouslySetInnerHTML={{ __html: descriptionSecondary }}
+                />
+              )}
 
               <div className="grid grid-cols-2 gap-4 pt-4">
                 {highlights.map((item, index) => (

@@ -4,16 +4,43 @@ const Hero = ({ data }) => {
   const [typedText, setTypedText] = useState("");
   const [textVisible, setTextVisible] = useState(false); 
   const [textDimmed, setTextDimmed] = useState(false); // New state for dimming text
+  const [videoLoaded, setVideoLoaded] = useState(false);
+  const [videoError, setVideoError] = useState(false);
+  const [thumbnailError, setThumbnailError] = useState(false);
+  const videoRef = useRef(null);
   const typingRef = useRef(null);
   const dimmingRef = useRef(null);
   const startRef = useRef(null);
+  const isAnimatingRef = useRef(false); // Track if animation is currently running
   const fullText = useMemo(
-    () => data?.headline || "WWe Create the Most Engaging Events in the World Using Technology",
+    () => data?.headline || "We Create the Most Engaging Events in the World Using Technology",
     [data]
   );
   const backgroundVideo = data?.background_video_url || "https://api.stagepass.co.ke/uploads/stagepass-audio-visual-safaricom-ceo-awade.mp4";
+  
+  // Generate thumbnail URL from video URL
+  const thumbnailUrl = useMemo(() => {
+    if (backgroundVideo) {
+      const videoUrl = backgroundVideo;
+      // Try different thumbnail naming conventions
+      if (videoUrl.endsWith('.mp4')) {
+        // Try _thumb.jpg first, then .jpg, then default path
+        const baseUrl = videoUrl.replace('.mp4', '');
+        return `${baseUrl}_thumb.jpg`;
+      }
+      // If not .mp4, try to append _thumb.jpg
+      return `${videoUrl}_thumb.jpg`;
+    }
+    return null;
+  }, [backgroundVideo]);
 
   useEffect(() => {
+    // Prevent double execution in React StrictMode or if animation is already running
+    if (isAnimatingRef.current) {
+      return;
+    }
+
+    // Clear any existing timers
     if (startRef.current) {
       clearTimeout(startRef.current);
     }
@@ -24,44 +51,131 @@ const Hero = ({ data }) => {
       clearTimeout(dimmingRef.current);
     }
 
+    // Reset states
     setTypedText("");
     setTextVisible(false);
     setTextDimmed(false);
+    isAnimatingRef.current = true;
 
+    // Start typing animation after a short delay
     startRef.current = setTimeout(() => {
       setTextVisible(true); 
-      let i = 0;
+      let currentIndex = 0;
+      const textLength = fullText.length;
+      
       typingRef.current = setInterval(() => {
-        if (i < fullText.length) {
-          setTypedText(prev => prev + fullText.charAt(i));
-          i++;
+        if (currentIndex < textLength) {
+          // Use substring instead of appending to prevent duplication
+          setTypedText(fullText.substring(0, currentIndex + 1));
+          currentIndex++;
         } else {
           clearInterval(typingRef.current);
+          typingRef.current = null;
           // Start dimming after typing is complete
           dimmingRef.current = setTimeout(() => {
             setTextDimmed(true);
+            isAnimatingRef.current = false; // Animation complete
           }, 5000); // 5 seconds after typing is complete
         }
       }, 70); // Typing speed in ms per character
     }, 200); 
 
     return () => {
-      clearTimeout(startRef.current);
-      clearInterval(typingRef.current);
-      clearTimeout(dimmingRef.current); // Clear dimming timeout on unmount
+      if (startRef.current) {
+        clearTimeout(startRef.current);
+        startRef.current = null;
+      }
+      if (typingRef.current) {
+        clearInterval(typingRef.current);
+        typingRef.current = null;
+      }
+      if (dimmingRef.current) {
+        clearTimeout(dimmingRef.current);
+        dimmingRef.current = null;
+      }
+      // Reset the flag when effect is cleaned up
+      isAnimatingRef.current = false;
     };
   }, [fullText]);
+
+  // Handle video loading
+  useEffect(() => {
+    // Reset states when video changes
+    setVideoLoaded(false);
+    setVideoError(false);
+    setThumbnailError(false);
+
+    if (videoRef.current) {
+      const video = videoRef.current;
+      
+      const handleCanPlay = () => {
+        setVideoLoaded(true);
+        setVideoError(false);
+      };
+
+      const handleError = () => {
+        setVideoError(true);
+        setVideoLoaded(false);
+      };
+
+      const handleLoadedData = () => {
+        // Video has loaded enough data to start playing
+        setVideoLoaded(true);
+      };
+
+      video.addEventListener('canplay', handleCanPlay);
+      video.addEventListener('loadeddata', handleLoadedData);
+      video.addEventListener('error', handleError);
+
+      // Try to load the video
+      video.load();
+
+      return () => {
+        video.removeEventListener('canplay', handleCanPlay);
+        video.removeEventListener('loadeddata', handleLoadedData);
+        video.removeEventListener('error', handleError);
+      };
+    }
+  }, [backgroundVideo]);
   return (
     <section className="relative h-[56.25vw] md:h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white -mt-[4.25rem] md:mt-0" style={{ paddingTop: '4.25rem', minHeight: 'calc(100vh - 10rem)' }}>
-      {/* Background Image */}
+      {/* Background Image/Video */}
       <div className="absolute inset-0 z-0">
+        {/* Thumbnail/Poster Image - Shows while video loads */}
+        {(!videoLoaded || videoError) && thumbnailUrl && !thumbnailError && (
+          <img
+            src={thumbnailUrl}
+            alt="Hero background"
+            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
+              videoLoaded ? 'opacity-0' : 'opacity-100'
+            }`}
+            onError={() => setThumbnailError(true)}
+            loading="eager"
+          />
+        )}
+        
+        {/* Fallback gradient if no thumbnail or thumbnail failed to load */}
+        {(!videoLoaded || videoError) && (!thumbnailUrl || thumbnailError) && (
+          <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black"></div>
+        )}
+
+        {/* Video - Shows once loaded */}
         <video
+          ref={videoRef}
           src={backgroundVideo}
           loop
           autoPlay
           muted
-          className="w-full h-full object-cover"
+          playsInline
+          preload="metadata"
+          poster={thumbnailUrl || undefined}
+          className={`w-full h-full object-cover transition-opacity duration-1000 ${
+            videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'
+          }`}
+          onCanPlay={() => setVideoLoaded(true)}
+          onError={() => setVideoError(true)}
         />
+        
         <div className="absolute inset-0 bg-black opacity-50"></div> {/* Dark overlay */}
       </div>
 
