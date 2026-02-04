@@ -8,10 +8,10 @@ const Hero = ({ data }) => {
   const dimmingRef = useRef(null);
   const startRef = useRef(null);
   const fullText = useMemo(
-    () => data?.headline || "We Create the Most Engaging Events in the World Using Technology",
+    () => data?.headline || "WWe Create the Most Engaging Events in the World Using Technology",
     [data]
   );
-  const backgroundVideo = data?.background_video_url || "https://stagepass.co.ke/uploads/video/ceo.mp4";
+  const backgroundVideo = data?.background_video_url || "https://api.stagepass.co.ke/uploads/stagepass-audio-visual-safaricom-ceo-awade.mp4";
 
   useEffect(() => {
     if (startRef.current) {

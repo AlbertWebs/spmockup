@@ -20,6 +20,7 @@ import Privacy from './pages/Privacy';
 import TermsAndConditions from './pages/TermsAndConditions';
 import AboutPage from './pages/About';
 import ServicesPage from './pages/Services';
+import ServicePage from './pages/ServicePage';
 import OurWork from './pages/OurWork';
 import IndustriesPage from './pages/Industries';
 import ContactPage from './pages/Contact';
@@ -160,6 +161,10 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/about" element={<AboutPage />} />
             <Route path="/services" element={<ServicesPage />} />
+            <Route path="/service/:service" element={<ServicePage />} />
+            <Route path="/service/:service/:subservice" element={<ServicePage />} />
+            <Route path="/services/:service" element={<ServicePage />} />
+            <Route path="/services/:service/:subservice" element={<ServicePage />} />
             <Route path="/our-work" element={<OurWork />} />
             <Route path="/our-Work" element={<OurWork />} />
             <Route path="/industries" element={<IndustriesPage />} />
