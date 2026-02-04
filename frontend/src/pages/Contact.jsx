@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import BottomNavbar from '../components/BottomNavbar';
 import Breadcrumb from '../components/Breadcrumb';
 import ContactSection from '../components/Contact';
+import SEO from '../components/SEO';
 import useHomepageData from '../hooks/useHomepageData';
 import usePageData from '../hooks/usePageData';
 
@@ -11,8 +12,36 @@ const ContactPage = () => {
   const { homepageData } = useHomepageData();
   const { pageData, loadError } = usePageData('contact');
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "ContactPage",
+    "name": "Contact Us - StagePass Audio Visual Limited",
+    "description": "Get in touch with StagePass Audio Visual Limited for professional audio visual and event production services in Kenya.",
+    "url": "https://stagepass.co.ke/contact",
+    "mainEntity": {
+      "@type": "LocalBusiness",
+      "name": "StagePass Audio Visual Limited",
+      "telephone": "+254 729 171 351",
+      "email": "info@stagepass.co.ke",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Jacaranda Close, Ridgeways",
+        "addressLocality": "Nairobi",
+        "addressCountry": "KE"
+      }
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <SEO
+        title="Contact Us - Get Your AV Quote | StagePass Audio Visual"
+        description="Contact StagePass Audio Visual Limited for professional audio visual services, event production, and technical support in Kenya. Get a free quote today."
+        keywords="contact StagePass, AV quote Kenya, event production contact, audio visual services Nairobi"
+        url="https://stagepass.co.ke/contact"
+        structuredData={structuredData}
+      />
+      <div className="min-h-screen bg-white">
       <Navbar data={homepageData?.navigation} isPage={true} />
       {loadError && (
         <div className="bg-red-50 text-red-700 text-center py-4 font-semibold mt-20">
@@ -82,7 +111,8 @@ const ContactPage = () => {
       
       <Footer data={homepageData?.footer} />
       <BottomNavbar data={homepageData?.navigation?.bottom_links} isPage={true} />
-    </div>
+      </div>
+    </>
   );
 };
 

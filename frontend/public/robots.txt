@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Sitemap
+Sitemap: https://stagepass.co.ke/sitemap.xml
+
+# Disallow admin and API routes
+Disallow: /admin/
+Disallow: /api/
+
+# Allow all public pages
+Allow: /
+Allow: /about
+Allow: /services
+Allow: /our-work
+Allow: /industries
+Allow: /contact
+Allow: /privacy
+Allow: /terms-and-conditions

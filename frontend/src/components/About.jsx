@@ -48,8 +48,11 @@ const About = ({ data }) => {
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
                 <img
                   src={imageUrl}
-                  alt="Event Production"
+                  alt="StagePass Audio Visual - Professional event production and AV services in Kenya"
                   className="w-full h-[300px] md:h-[550px] object-cover"
+                  loading="lazy"
+                  width="800"
+                  height="600"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#172455]/70 to-transparent"></div>
               </div>
@@ -82,7 +85,7 @@ const About = ({ data }) => {
                 {descriptionPrimary}
               </p>
 
-              <p className="text-xl text-gray-700 leading-relaxed font-medium">
+              <p className="text-lg text-gray-700 leading-relaxed">
                 {descriptionSecondary}
               </p>
 

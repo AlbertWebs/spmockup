@@ -7,7 +7,7 @@ const getApiBaseUrl = () => {
   }
   
   // Default to production API
-  return 'https://stagepassapi.designekta.com';
+  return 'https://api.stagepass.co.ke';
 };
 
 export const API_BASE_URL = getApiBaseUrl();

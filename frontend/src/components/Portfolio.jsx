@@ -222,8 +222,11 @@ const Portfolio = ({ data, portfolioSource }) => {
               >
                 <img
                   src={thumbnail}
-                  alt={itemTitle}
+                  alt={`${itemTitle} - StagePass Audio Visual Portfolio`}
                   className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
+                  loading="lazy"
+                  width="400"
+                  height="300"
                 />
                 
                 {/* Gradient overlay */}
@@ -270,7 +273,10 @@ const Portfolio = ({ data, portfolioSource }) => {
               >
                 <img
                   src={thumbnail}
-                  alt={itemTitle}
+                  alt={`${itemTitle} - StagePass Audio Visual Portfolio`}
+                  loading="lazy"
+                  width="400"
+                  height="300"
                   className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                 />
                 

@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import BottomNavbar from '../components/BottomNavbar';
 import Breadcrumb from '../components/Breadcrumb';
 import AboutSection from '../components/About';
+import SEO from '../components/SEO';
 import useHomepageData from '../hooks/useHomepageData';
 import usePageData from '../hooks/usePageData';
 
@@ -11,8 +12,29 @@ const About = () => {
   const { homepageData } = useHomepageData();
   const { pageData, loadError } = usePageData('about');
 
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@type": "AboutPage",
+    "name": "About Us - StagePass Audio Visual Limited",
+    "description": "Learn about StagePass Audio Visual Limited, Kenya's leading events and audio-visual company providing professional sound systems, event production, and technical event support.",
+    "url": "https://stagepass.co.ke/about",
+    "mainEntity": {
+      "@type": "Organization",
+      "name": "StagePass Audio Visual Limited",
+      "description": "Professional audio visual and event production company in Kenya"
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-white">
+    <>
+      <SEO
+        title="About Us - StagePass Audio Visual Limited | Professional AV Services in Kenya"
+        description="Learn about StagePass Audio Visual Limited, Kenya's leading events and audio-visual company providing professional sound systems, event production, video conferencing, and technical event support."
+        keywords="about StagePass, audio visual company Kenya, event production company, AV services Nairobi"
+        url="https://stagepass.co.ke/about"
+        structuredData={structuredData}
+      />
+      <div className="min-h-screen bg-white">
       <Navbar data={homepageData?.navigation} isPage={true} />
       {loadError && (
         <div className="bg-red-50 text-red-700 text-center py-4 font-semibold mt-20">
@@ -64,7 +86,8 @@ const About = () => {
       
       <Footer data={homepageData?.footer} />
       <BottomNavbar data={homepageData?.navigation?.bottom_links} isPage={true} />
-    </div>
+      </div>
+    </>
   );
 };
 
