@@ -166,8 +166,8 @@ const Portfolio = ({ data, portfolioSource }) => {
       <div className="absolute top-20 right-0 w-[600px] h-[600px] bg-yellow-100 rounded-full blur-3xl opacity-30 animate-pulse-slow"></div>
       
       <div ref={ref} className={`container mx-auto px-6 lg:px-12 relative z-10 transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-        {/* Header */}
-        <div className={`text-center mb-10 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
+        {/* Header - Hidden on mobile, visible on desktop */}
+        <div className={`hidden md:block text-center mb-10 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
           <span className="text-sm font-bold text-yellow-600 tracking-wider uppercase bg-yellow-100 px-4 py-2 rounded-full">{badgeLabel}</span>
           <h2 className="text-5xl lg:text-6xl font-black text-[#172455] mt-6 mb-8">
             {title}
@@ -229,8 +229,8 @@ const Portfolio = ({ data, portfolioSource }) => {
                   height="300"
                 />
                 
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#172455]/90 via-[#172455]/50 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Gradient overlay - Hidden on mobile, visible on desktop */}
+                <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-[#172455]/90 via-[#172455]/50 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
                 {/* Play button for videos */}
                 {isVideo && (
@@ -241,8 +241,8 @@ const Portfolio = ({ data, portfolioSource }) => {
                   </div>
                 )}
                 
-                {/* Title */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                {/* Title - Hidden on mobile, visible on desktop */}
+                <div className="hidden md:block absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                   <h3 className="text-white font-bold text-lg line-clamp-2">{itemTitle}</h3>
                   <div className="h-1 w-12 bg-yellow-400 mt-2"></div>
                 </div>
@@ -280,8 +280,8 @@ const Portfolio = ({ data, portfolioSource }) => {
                   className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                 />
                 
-                {/* Gradient overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#172455]/90 via-[#172455]/50 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
+                {/* Gradient overlay - Hidden on mobile, visible on desktop */}
+                <div className="hidden md:block absolute inset-0 bg-gradient-to-t from-[#172455]/90 via-[#172455]/50 to-transparent opacity-60 group-hover:opacity-100 transition-opacity duration-500"></div>
                 
                 {/* Play button for videos */}
                 {isVideo && (
