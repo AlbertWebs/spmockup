@@ -18,8 +18,14 @@ const Hero = ({ data }) => {
   );
   const backgroundVideo = data?.background_video_url || "https://api.stagepass.co.ke/uploads/stagepass-audio-visual-safaricom-ceo-awade.mp4";
   
-  // Generate thumbnail URL from video URL
+  // Use thumbnail_url from API, fallback to generating from video URL if not provided
   const thumbnailUrl = useMemo(() => {
+    // First, try to use the thumbnail_url from the API (uploaded via admin panel)
+    if (data?.thumbnail_url) {
+      return data.thumbnail_url;
+    }
+    
+    // Fallback: Generate thumbnail URL from video URL if no thumbnail was uploaded
     if (backgroundVideo) {
       const videoUrl = backgroundVideo;
       // Try different thumbnail naming conventions
@@ -32,7 +38,7 @@ const Hero = ({ data }) => {
       return `${videoUrl}_thumb.jpg`;
     }
     return null;
-  }, [backgroundVideo]);
+  }, [data?.thumbnail_url, backgroundVideo]);
 
   useEffect(() => {
     // Prevent double execution in React StrictMode or if animation is already running
