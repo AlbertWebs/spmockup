@@ -63,7 +63,7 @@ const Hero = ({ data }) => {
     setTextDimmed(false);
     isAnimatingRef.current = true;
 
-    // Start typing animation after a short delay
+    // Start typing animation after 3 seconds
     startRef.current = setTimeout(() => {
       setTextVisible(true); 
       let currentIndex = 0;
@@ -84,7 +84,7 @@ const Hero = ({ data }) => {
           }, 5000); // 5 seconds after typing is complete
         }
       }, 70); // Typing speed in ms per character
-    }, 200); 
+    }, 3000); // 3 seconds delay before typing starts 
 
     return () => {
       if (startRef.current) {
