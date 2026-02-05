@@ -21,6 +21,7 @@ import AboutPage from './pages/About';
 import ServicesPage from './pages/Services';
 import ServicePage from './pages/ServicePage';
 import OurWork from './pages/OurWork';
+import PortfolioPage from './pages/Portfolio';
 import IndustriesPage from './pages/Industries';
 import ContactPage from './pages/Contact';
 import Sitemap from './pages/Sitemap';
@@ -166,6 +167,7 @@ function App() {
             <Route path="/services/:service/:subservice" element={<ServicePage />} />
             <Route path="/our-work" element={<OurWork />} />
             <Route path="/our-Work" element={<OurWork />} />
+            <Route path="/portfolio" element={<PortfolioPage />} />
             <Route path="/industries" element={<IndustriesPage />} />
             <Route path="/contact" element={<ContactPage />} />
             <Route path="/privacy" element={<Privacy />} />
