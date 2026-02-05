@@ -1,10 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { Phone, Mail, MapPin, Send, Clock } from 'lucide-react';
 import { useToast } from '../hooks/use-toast';
 import useOnScreen from '../hooks/useOnScreen';
+import { API_BASE_URL } from '../config/api';
 
 const Contact = () => {
   const { toast } = useToast();
@@ -14,19 +15,166 @@ const Contact = () => {
     email: '',
     phone: '',
     message: '',
+    honeypot: '', // Honeypot field for spam protection
   });
+  const [mathChallenge, setMathChallenge] = useState({ a: 0, b: 0, operator: '+' });
+  const [mathAnswer, setMathAnswer] = useState('');
+  const [formTimestamp, setFormTimestamp] = useState(0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  // Generate math challenge when component mounts or form is reset
+  useEffect(() => {
+    generateMathChallenge();
+    setFormTimestamp(Math.floor(Date.now() / 1000));
+  }, []);
+
+  const generateMathChallenge = () => {
+    const a = Math.floor(Math.random() * 8) + 2;
+    const b = Math.floor(Math.random() * 8) + 2;
+    const operator = Math.random() > 0.5 ? '+' : '-';
+    setMathChallenge({ a, b, operator });
+    setMathAnswer('');
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    toast({
-      title: "Message Sent!",
-      description: "We'll get back to you within 24 hours.",
-    });
-    setFormData({ name: '', email: '', phone: '', message: '' });
+    setError('');
+    
+    // Basic honeypot check
+    if (formData.honeypot) {
+      return; // Silent fail for bots
+    }
+
+    // Validate math answer
+    const expectedAnswer = mathChallenge.operator === '+' 
+      ? mathChallenge.a + mathChallenge.b 
+      : mathChallenge.a - mathChallenge.b;
+    
+    if (parseInt(mathAnswer) !== expectedAnswer) {
+      setError('Please solve the math challenge correctly.');
+      generateMathChallenge();
+      return;
+    }
+
+    setIsSubmitting(true);
+
+    try {
+      console.log('Submitting contact form to:', `${API_BASE_URL}/api/contact/submit`);
+      
+      const response = await fetch(`${API_BASE_URL}/api/contact/submit`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+        mode: 'cors',
+        credentials: 'omit',
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          math_answer: parseInt(mathAnswer),
+          math_challenge: `${mathChallenge.a} ${mathChallenge.operator} ${mathChallenge.b}`,
+          form_timestamp: formTimestamp,
+          honeypot: formData.honeypot,
+        }),
+      });
+
+      // Check if response is ok
+      if (!response.ok) {
+        let errorMessage = `Server error (${response.status}): ${response.statusText}`;
+        let errorData = null;
+        
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            errorData = await response.json();
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } else {
+            const text = await response.text();
+            if (text.includes('419') || text.includes('Page Expired')) {
+              errorMessage = 'Session expired. Please refresh the page and try again.';
+            } else if (text.includes('500') || text.includes('Internal Server Error')) {
+              errorMessage = 'Server error. Please try again later or contact support.';
+            } else {
+              errorMessage = `Server error: ${text.substring(0, 200)}`;
+            }
+          }
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError);
+          errorMessage = `Server error (${response.status}). Unable to parse error message.`;
+        }
+        
+        console.error('Contact form submission error:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData,
+          url: `${API_BASE_URL}/api/contact/submit`,
+        });
+        
+        setError(errorMessage);
+        setIsSubmitting(false);
+        return;
+      }
+
+      // Parse JSON response
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('Error parsing JSON response:', jsonError);
+        setError('Invalid response from server. Please try again.');
+        setIsSubmitting(false);
+        return;
+      }
+
+      if (data.success) {
+        toast({
+          title: "Message Sent!",
+          description: data.message || "We'll get back to you within 24 hours.",
+        });
+        setFormData({ name: '', email: '', phone: '', message: '', honeypot: '' });
+        setMathAnswer('');
+        generateMathChallenge();
+        setFormTimestamp(Math.floor(Date.now() / 1000));
+      } else {
+        setError(data.message || data.error || 'Failed to submit message. Please try again.');
+        if (data.errors) {
+          console.error('Validation errors:', data.errors);
+        }
+      }
+    } catch (err) {
+      console.error('Network or other error:', err);
+      console.error('Error details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack,
+        apiUrl: `${API_BASE_URL}/api/contact/submit`,
+      });
+      
+      let errorMessage = 'Unable to connect to server. ';
+      if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+        errorMessage += 'This could be due to:\n';
+        errorMessage += '• CORS policy blocking the request\n';
+        errorMessage += '• Server is not responding\n';
+        errorMessage += '• Network connectivity issue\n';
+        errorMessage += `\nAPI URL: ${API_BASE_URL}/api/contact/submit\n`;
+        errorMessage += 'Please check the browser console for more details.';
+      } else {
+        errorMessage += err.message || 'Please check your internet connection and try again.';
+      }
+      
+      setError(errorMessage);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setError('');
   };
 
   return (
@@ -97,6 +245,12 @@ const Contact = () => {
           {/* Right - Contact Form */}
           <div className={`bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl p-10 lg:p-14 border-2 border-gray-100 ${isVisible ? 'animate-slide-in-right' : 'opacity-0'}`}>
             <form onSubmit={handleSubmit} className="space-y-6">
+              {error && (
+                <div className="p-4 bg-red-50 border border-red-200 rounded-xl text-red-700 text-sm">
+                  {error}
+                </div>
+              )}
+              
               <div>
                 <label className="block text-sm font-bold text-[#172455] mb-3">Full Name</label>
                 <Input
@@ -149,11 +303,39 @@ const Contact = () => {
                 />
               </div>
 
+              {/* Math Challenge */}
+              <div>
+                <label className="block text-sm font-bold text-[#172455] mb-3">
+                  Math Challenge: {mathChallenge.a} {mathChallenge.operator} {mathChallenge.b} = ?
+                </label>
+                <Input
+                  type="number"
+                  value={mathAnswer}
+                  onChange={(e) => setMathAnswer(e.target.value)}
+                  placeholder="Enter answer"
+                  required
+                  className="w-full h-14 text-base border-2 border-gray-200 focus:border-yellow-500 rounded-xl"
+                />
+              </div>
+
+              {/* Honeypot field - hidden */}
+              <div style={{ display: 'none' }}>
+                <label htmlFor="honeypot">Do not fill this field</label>
+                <Input
+                  type="text"
+                  id="honeypot"
+                  name="honeypot"
+                  value={formData.honeypot}
+                  onChange={handleChange}
+                />
+              </div>
+
               <Button
                 type="submit"
-                className="w-full bg-gradient-to-r from-[#172455] to-[#1e3a8a] hover:from-[#0f1b3d] hover:to-[#172455] text-white py-7 text-lg rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 hover:scale-105 font-bold group"
+                disabled={isSubmitting}
+                className="w-full bg-gradient-to-r from-[#172455] to-[#1e3a8a] hover:from-[#0f1b3d] hover:to-[#172455] text-white py-7 text-lg rounded-full shadow-2xl hover:shadow-yellow-500/50 transition-all duration-300 hover:scale-105 font-bold group disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Send Message 
+                {isSubmitting ? 'Sending...' : 'Send Message'}
                 <Send className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform" />
               </Button>
             </form>

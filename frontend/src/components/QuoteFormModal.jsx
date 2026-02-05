@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { API_BASE_URL } from '../config/api';
 
@@ -10,9 +10,28 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
     message: '',
     honeypot: '', // Honeypot field for spam protection
   });
+  const [mathChallenge, setMathChallenge] = useState({ a: 0, b: 0, operator: '+' });
+  const [mathAnswer, setMathAnswer] = useState('');
+  const [formTimestamp, setFormTimestamp] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState(false);
+
+  // Generate math challenge when modal opens
+  useEffect(() => {
+    if (isOpen) {
+      generateMathChallenge();
+      setFormTimestamp(Math.floor(Date.now() / 1000));
+    }
+  }, [isOpen]);
+
+  const generateMathChallenge = () => {
+    const a = Math.floor(Math.random() * 8) + 2;
+    const b = Math.floor(Math.random() * 8) + 2;
+    const operator = Math.random() > 0.5 ? '+' : '-';
+    setMathChallenge({ a, b, operator });
+    setMathAnswer('');
+  };
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -27,6 +46,17 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
     // Basic honeypot check
     if (formData.honeypot) {
       onClose();
+      return;
+    }
+
+    // Validate math answer
+    const expectedAnswer = mathChallenge.operator === '+' 
+      ? mathChallenge.a + mathChallenge.b 
+      : mathChallenge.a - mathChallenge.b;
+    
+    if (parseInt(mathAnswer) !== expectedAnswer) {
+      setError('Please solve the math challenge correctly.');
+      generateMathChallenge();
       return;
     }
 
@@ -54,6 +84,9 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
           email: formData.email,
           phone: formData.phone,
           message: formData.message,
+          math_answer: parseInt(mathAnswer),
+          math_challenge: `${mathChallenge.a} ${mathChallenge.operator} ${mathChallenge.b}`,
+          form_timestamp: formTimestamp,
           honeypot: formData.honeypot,
         }),
       });
@@ -118,6 +151,9 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
             message: '',
             honeypot: '',
           });
+          setMathAnswer('');
+          generateMathChallenge();
+          setFormTimestamp(Math.floor(Date.now() / 1000));
           setSuccess(false);
         }, 2000);
       } else {
@@ -241,6 +277,23 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
               required
             ></textarea>
           </div>
+          
+          {/* Math Challenge */}
+          <div>
+            <label htmlFor="mathAnswer" className="block text-sm sm:text-base font-semibold text-[#172455] mb-1 sm:mb-2">
+              Math Challenge: {mathChallenge.a} {mathChallenge.operator} {mathChallenge.b} = ?
+            </label>
+            <input
+              type="number"
+              id="mathAnswer"
+              value={mathAnswer}
+              onChange={(e) => setMathAnswer(e.target.value)}
+              placeholder="Enter answer"
+              required
+              className="block w-full px-3 sm:px-4 py-2 sm:py-2.5 border-2 border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base transition-all duration-300"
+            />
+          </div>
+          
           {/* Honeypot field */}
           <div style={{ display: 'none' }}>
             <label htmlFor="honeypot">Do not fill this field</label>
