@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { API_BASE_URL } from '../config/api';
 
 const QuoteFormModal = ({ isOpen, onClose }) => {
@@ -73,9 +74,21 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
 
   if (!isOpen) return null;
 
-  return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[9999] p-4 overflow-y-auto">
-      <div className="bg-gradient-to-br from-white to-gray-50 p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-100 w-full max-w-md mx-auto my-auto">
+  const modalContent = (
+    <div 
+      className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-[99999] p-4 overflow-y-auto"
+      style={{ isolation: 'isolate', position: 'fixed' }}
+      onClick={(e) => {
+        // Close modal when clicking backdrop
+        if (e.target === e.currentTarget) {
+          onClose();
+        }
+      }}
+    >
+      <div 
+        className="bg-gradient-to-br from-white to-gray-50 p-4 sm:p-6 md:p-8 rounded-xl sm:rounded-2xl shadow-2xl border border-gray-100 w-full max-w-md mx-auto my-auto relative z-[99999]"
+        onClick={(e) => e.stopPropagation()}
+      >
         <div className="flex justify-between items-center mb-4 sm:mb-6">
           <h2 className="text-xl sm:text-2xl md:text-2xl font-extrabold text-center text-[#172455] flex-1">Get Your AV Quote</h2>
           <button
@@ -177,6 +190,9 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
       </div>
     </div>
   );
+
+  // Render modal using portal to document body to ensure it's above everything
+  return createPortal(modalContent, document.body);
 };
 
 export default QuoteFormModal;
