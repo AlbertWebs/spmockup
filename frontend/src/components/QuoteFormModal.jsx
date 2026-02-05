@@ -47,7 +47,54 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
         }),
       });
 
-      const data = await response.json();
+      // Check if response is ok (status 200-299)
+      if (!response.ok) {
+        // Try to parse as JSON first
+        let errorMessage = `Server error (${response.status}): ${response.statusText}`;
+        let errorData = null;
+        
+        try {
+          const contentType = response.headers.get('content-type');
+          if (contentType && contentType.includes('application/json')) {
+            errorData = await response.json();
+            errorMessage = errorData.message || errorData.error || errorMessage;
+          } else {
+            // If not JSON, try to get text (might be HTML error page)
+            const text = await response.text();
+            // Try to extract error from HTML if it's an error page
+            if (text.includes('419') || text.includes('Page Expired')) {
+              errorMessage = 'Session expired. Please refresh the page and try again.';
+            } else if (text.includes('500') || text.includes('Internal Server Error')) {
+              errorMessage = 'Server error. Please try again later or contact support.';
+            } else {
+              errorMessage = `Server error: ${text.substring(0, 200)}`;
+            }
+          }
+        } catch (parseError) {
+          console.error('Error parsing response:', parseError);
+          errorMessage = `Server error (${response.status}). Unable to parse error message.`;
+        }
+        
+        console.error('Quote form submission error:', {
+          status: response.status,
+          statusText: response.statusText,
+          errorData,
+          url: `${API_BASE_URL}/api/quote/submit`,
+        });
+        
+        setError(errorMessage);
+        return;
+      }
+
+      // Parse JSON response
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        console.error('Error parsing JSON response:', jsonError);
+        setError('Invalid response from server. Please try again.');
+        return;
+      }
 
       if (data.success) {
         setSuccess(true);
@@ -63,10 +110,14 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
           setSuccess(false);
         }, 2000);
       } else {
-        setError(data.message || 'Failed to submit quote request. Please try again.');
+        setError(data.message || data.error || 'Failed to submit quote request. Please try again.');
+        if (data.errors) {
+          console.error('Validation errors:', data.errors);
+        }
       }
     } catch (err) {
-      setError('An error occurred. Please try again later.');
+      console.error('Network or other error:', err);
+      setError(`Network error: ${err.message || 'Unable to connect to server. Please check your internet connection and try again.'}`);
     } finally {
       setIsSubmitting(false);
     }
