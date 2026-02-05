@@ -33,11 +33,22 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
     setIsSubmitting(true);
 
     try {
+      console.log('Submitting quote form to:', `${API_BASE_URL}/api/quote/submit`);
+      console.log('Form data:', {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message.substring(0, 50) + '...',
+      });
+
       const response = await fetch(`${API_BASE_URL}/api/quote/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Accept': 'application/json',
         },
+        mode: 'cors', // Explicitly set CORS mode
+        credentials: 'omit', // Don't send cookies
         body: JSON.stringify({
           name: formData.name,
           email: formData.email,
@@ -117,7 +128,27 @@ const QuoteFormModal = ({ isOpen, onClose }) => {
       }
     } catch (err) {
       console.error('Network or other error:', err);
-      setError(`Network error: ${err.message || 'Unable to connect to server. Please check your internet connection and try again.'}`);
+      console.error('Error details:', {
+        name: err.name,
+        message: err.message,
+        stack: err.stack,
+        apiUrl: `${API_BASE_URL}/api/quote/submit`,
+      });
+      
+      // Provide more specific error messages
+      let errorMessage = 'Unable to connect to server. ';
+      if (err.name === 'TypeError' && err.message.includes('Failed to fetch')) {
+        errorMessage += 'This could be due to:\n';
+        errorMessage += '• CORS policy blocking the request\n';
+        errorMessage += '• Server is not responding\n';
+        errorMessage += '• Network connectivity issue\n';
+        errorMessage += `\nAPI URL: ${API_BASE_URL}/api/quote/submit\n`;
+        errorMessage += 'Please check the browser console for more details.';
+      } else {
+        errorMessage += err.message || 'Please check your internet connection and try again.';
+      }
+      
+      setError(errorMessage);
     } finally {
       setIsSubmitting(false);
     }
