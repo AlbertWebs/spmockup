@@ -25,7 +25,7 @@ const getIndustryDescription = (title) => {
   return descriptions[title] || 'Tailored audio-visual solutions designed to elevate your event experience with precision, creativity, and excellence.';
 };
 
-const IndustryCard = ({ title, icon: Icon, iconUrl, description, onTap }) => {
+const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescription, onTap }) => {
   const [isHovered, setIsHovered] = useState(false);
 
   return (
@@ -53,7 +53,7 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, onTap }) => {
         </div>
 
         {/* Hover Overlay with Details */}
-        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-6 rounded-2xl flex flex-col justify-center items-center transition-all duration-500 ${
+        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-6 rounded-2xl flex flex-col justify-center items-center transition-all duration-500 overflow-y-auto ${
           isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}>
           {iconUrl ? (
@@ -62,15 +62,16 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, onTap }) => {
             <Icon className="text-yellow-400 mb-4" size={48} />
           )}
           <h3 className="font-bold text-yellow-400 text-xl mb-3 text-center">{title}</h3>
-          <p className="text-sm text-slate-200 text-center leading-relaxed line-clamp-4">
-            {description}
-          </p>
-          <div className="mt-4 flex items-center gap-2 text-yellow-400 text-xs">
-            <span>Learn More</span>
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
-          </div>
+          {overlayDescription ? (
+            <div 
+              className="text-sm text-slate-200 text-center leading-relaxed prose prose-invert prose-sm max-w-none"
+              dangerouslySetInnerHTML={{ __html: overlayDescription }}
+            />
+          ) : (
+            <p className="text-sm text-slate-200 text-center leading-relaxed line-clamp-4">
+              {description}
+            </p>
+          )}
         </div>
       </div>
 
@@ -125,6 +126,7 @@ const Industries = ({ data }) => {
           ? (item.icon_url.startsWith('http') ? item.icon_url : `${API_BASE_URL}${item.icon_url}`)
           : null,
         description: item.description || getIndustryDescription(item.title),
+        overlayDescription: item.overlay_description || null,
       }));
     }
     return [
@@ -212,6 +214,7 @@ const Industries = ({ data }) => {
                 icon={industry.icon}
                 iconUrl={industry.iconUrl}
                 description={industry.description}
+                overlayDescription={industry.overlayDescription}
                 onTap={() => handleCardTap(industry)}
               />
             </div>
@@ -241,7 +244,14 @@ const Industries = ({ data }) => {
                   {selectedIndustry.title}
                 </DialogTitle>
                 <DialogDescription className="text-gray-600 text-center mt-4 leading-relaxed">
-                  {selectedIndustry.description}
+                  {selectedIndustry.overlayDescription ? (
+                    <div 
+                      className="prose prose-sm max-w-none text-left"
+                      dangerouslySetInnerHTML={{ __html: selectedIndustry.overlayDescription }}
+                    />
+                  ) : (
+                    selectedIndustry.description
+                  )}
                 </DialogDescription>
               </DialogHeader>
             </DialogContent>
