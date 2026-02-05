@@ -13,7 +13,6 @@ import Contact from './components/Contact';
 import Footer from './components/Footer';
 import { Toaster } from './components/ui/toaster';
 import BottomNavbar from './components/BottomNavbar';
-import PWAInstallPrompt from './components/PWAInstallPrompt';
 import useHomepageData from './hooks/useHomepageData';
 import './App.css';
 import Privacy from './pages/Privacy';
@@ -174,7 +173,6 @@ function App() {
             <Route path="/sitemap" element={<Sitemap />} />
           </Routes>
         </BrowserRouter>
-        <PWAInstallPrompt />
         <Toaster />
       </div>
     </HelmetProvider>

@@ -292,8 +292,8 @@ const Portfolio = ({ data, portfolioSource }) => {
                   </div>
                 )}
                 
-                {/* Title */}
-                <div className="absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
+                {/* Title - Hidden on mobile, visible on tablet and desktop for Instagram */}
+                <div className="hidden md:block absolute bottom-0 left-0 right-0 p-6 transform translate-y-full group-hover:translate-y-0 transition-transform duration-500">
                   <h3 className="text-white font-bold text-lg line-clamp-2">{itemTitle}</h3>
                   <div className="h-1 w-12 bg-yellow-400 mt-2"></div>
                 </div>

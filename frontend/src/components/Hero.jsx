@@ -127,8 +127,13 @@ const Hero = ({ data }) => {
       video.addEventListener('loadeddata', handleLoadedData);
       video.addEventListener('error', handleError);
 
-      // Try to load the video
+      // Set loading strategy for faster loading
       video.load();
+      
+      // Preload video more aggressively
+      if (video.readyState < 2) {
+        video.preload = 'auto';
+      }
 
       return () => {
         video.removeEventListener('canplay', handleCanPlay);
@@ -167,7 +172,7 @@ const Hero = ({ data }) => {
           autoPlay
           muted
           playsInline
-          preload="metadata"
+          preload="auto"
           poster={thumbnailUrl || undefined}
           className={`w-full h-full object-cover transition-opacity duration-1000 ${
             videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'

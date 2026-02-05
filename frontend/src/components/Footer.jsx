@@ -44,7 +44,6 @@ const Footer = ({ data }) => {
   const moreLinks = [
     { label: 'Terms & Conditions', href: '/terms-and-conditions', isPage: true },
     { label: 'Privacy Policy', href: '/privacy', isPage: true },
-    { label: 'Sitemap', href: '/sitemap', isPage: true },
     { label: 'Get AV Quote', href: '#quote', isPage: false, isQuote: true },
   ];
 
