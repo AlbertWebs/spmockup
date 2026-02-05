@@ -1,44 +1,110 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Building2, Clapperboard, Gem, Handshake, Music, Palette, Theater, Trophy } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
 import { API_BASE_URL } from '../config/api';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from './ui/dialog';
 
-const IndustryCard = ({ title, icon: Icon, iconUrl }) => {
+// Default descriptions for industries
+const getIndustryDescription = (title) => {
+  const descriptions = {
+    'Concerts': 'From intimate acoustic sets to large-scale music festivals, we deliver immersive audio-visual experiences that amplify every performance. Our state-of-the-art sound systems and dynamic lighting create unforgettable moments for artists and audiences alike.',
+    'Corporate Events': 'Professional presentations, conferences, and corporate gatherings require precision and reliability. We provide seamless AV solutions that enhance your message, from boardroom meetings to large-scale conventions.',
+    'Fashion': 'Fashion shows demand elegance and sophistication. Our lighting and sound design complement the artistry on the runway, creating an atmosphere that showcases every detail and movement.',
+    'Theater & Dance': 'Theatrical productions and dance performances need nuanced audio-visual support. We craft immersive environments that enhance storytelling and bring performances to life with precision and artistry.',
+    'Gala Dinners': 'Elegant events deserve elegant solutions. We create sophisticated atmospheres for gala dinners, award ceremonies, and formal gatherings with refined lighting and crystal-clear audio.',
+    'Trade shows': 'Make your brand stand out at trade shows and exhibitions. Our custom AV setups help you engage visitors, showcase products effectively, and create memorable brand experiences.',
+    'Sporting Events': 'From local tournaments to major sporting events, we deliver powerful sound systems and dynamic lighting that energize crowds and enhance the competitive atmosphere.',
+    'Nonprofit Events': 'Supporting meaningful causes with impactful presentations. We help nonprofit organizations communicate their mission effectively through professional AV solutions that inspire action.',
+  };
+  return descriptions[title] || 'Tailored audio-visual solutions designed to elevate your event experience with precision, creativity, and excellence.';
+};
+
+const IndustryCard = ({ title, icon: Icon, iconUrl, description, onTap }) => {
+  const [isHovered, setIsHovered] = useState(false);
 
   return (
-    <div className="relative h-72 rounded-2xl overflow-hidden group transition-all duration-500 transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-yellow-500/20 bg-white/80 backdrop-blur border border-yellow-100">
-      <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-200/40 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
-      {/* Front of the card */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center p-6 rounded-2xl transition-transform duration-500 group-hover:-rotate-y-180">
-        <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#172455] to-[#1e3a8a] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
-          {iconUrl ? (
-            <img src={iconUrl} alt={title} className="h-10 w-10 object-contain" />
-          ) : (
-            <Icon className="text-yellow-300" size={36} />
-          )}
+    <>
+      {/* Desktop: Hover overlay */}
+      <div 
+        className="relative h-72 rounded-2xl overflow-hidden group transition-all duration-500 transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-yellow-500/20 bg-white/80 backdrop-blur border border-yellow-100 hidden md:block cursor-pointer"
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+        <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-200/40 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
+        
+        {/* Front of the card */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 rounded-2xl transition-transform duration-500 group-hover:scale-95">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#172455] to-[#1e3a8a] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
+            {iconUrl ? (
+              <img src={iconUrl} alt={title} className="h-10 w-10 object-contain" />
+            ) : (
+              <Icon className="text-yellow-300" size={36} />
+            )}
+          </div>
+          <h3 className="text-2xl font-extrabold text-[#172455] mt-6 text-center">{title}</h3>
+          <p className="text-sm text-gray-500 mt-2 text-center">Tailored event solutions</p>
         </div>
-        <h3 className="text-2xl font-extrabold text-[#172455] mt-6 text-center">{title}</h3>
-        <p className="text-sm text-gray-500 mt-2 text-center">Tailored event solutions</p>
+
+        {/* Hover Overlay with Details */}
+        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-6 rounded-2xl flex flex-col justify-center items-center transition-all duration-500 ${
+          isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
+        }`}>
+          {iconUrl ? (
+            <img src={iconUrl} alt={title} className="h-12 w-12 object-contain mb-4" />
+          ) : (
+            <Icon className="text-yellow-400 mb-4" size={48} />
+          )}
+          <h3 className="font-bold text-yellow-400 text-xl mb-3 text-center">{title}</h3>
+          <p className="text-sm text-slate-200 text-center leading-relaxed line-clamp-4">
+            {description}
+          </p>
+          <div className="mt-4 flex items-center gap-2 text-yellow-400 text-xs">
+            <span>Learn More</span>
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+            </svg>
+          </div>
+        </div>
       </div>
 
-      {/* Back of the card */}
-      <div className="absolute inset-0 bg-[#172455] text-white p-6 rounded-2xl flex flex-col items-center justify-center transition-transform duration-500 rotate-y-180 group-hover:rotate-y-0 opacity-0 group-hover:opacity-100">
-        {iconUrl ? (
-          <img src={iconUrl} alt={title} className="h-12 w-12 object-contain" />
-        ) : (
-          <Icon className="text-yellow-400" size={40} />
-        )}
-        <p className="font-bold text-yellow-400 mt-4 text-lg">{title}</p>
-        <p className="text-xs text-slate-300 mt-2 text-center">Excellence • Precision • Creativity</p>
+      {/* Mobile: Tap to open modal */}
+      <div 
+        className="relative h-72 rounded-2xl overflow-hidden group transition-all duration-500 transform active:scale-95 bg-white/80 backdrop-blur border border-yellow-100 block md:hidden cursor-pointer"
+        onClick={onTap}
+      >
+        <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-blue-50 opacity-0 group-active:opacity-100 transition-opacity duration-200"></div>
+        <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-200/40 blur-2xl"></div>
+        
+        {/* Front of the card */}
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 rounded-2xl">
+          <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#172455] to-[#1e3a8a] flex items-center justify-center shadow-2xl">
+            {iconUrl ? (
+              <img src={iconUrl} alt={title} className="h-10 w-10 object-contain" />
+            ) : (
+              <Icon className="text-yellow-300" size={36} />
+            )}
+          </div>
+          <h3 className="text-2xl font-extrabold text-[#172455] mt-6 text-center">{title}</h3>
+          <p className="text-sm text-gray-500 mt-2 text-center">Tap for details</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
 const Industries = ({ data }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
+  const [selectedIndustry, setSelectedIndustry] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const section = data?.section;
+  
   const iconMap = useMemo(() => ({
     Concerts: Music,
     'Corporate Events': Building2,
@@ -58,43 +124,57 @@ const Industries = ({ data }) => {
         iconUrl: item.icon_url
           ? (item.icon_url.startsWith('http') ? item.icon_url : `${API_BASE_URL}${item.icon_url}`)
           : null,
+        description: item.description || getIndustryDescription(item.title),
       }));
     }
     return [
       {
         title: "Concerts",
         icon: Music,
+        description: getIndustryDescription("Concerts"),
       },
       {
         title: "Corporate Events",
         icon: Building2,
+        description: getIndustryDescription("Corporate Events"),
       },
       {
         title: "Fashion",
         icon: Palette,
+        description: getIndustryDescription("Fashion"),
       },
       {
         title: "Theater & Dance",
         icon: Theater,
+        description: getIndustryDescription("Theater & Dance"),
       },
       {
         title: "Gala Dinners",
         icon: Gem,
+        description: getIndustryDescription("Gala Dinners"),
       },
       {
         title: "Trade shows",
         icon: Clapperboard,
+        description: getIndustryDescription("Trade shows"),
       },
       {
         title: "Sporting Events",
         icon: Trophy,
+        description: getIndustryDescription("Sporting Events"),
       },
       {
         title: "Nonprofit Events",
         icon: Handshake,
+        description: getIndustryDescription("Nonprofit Events"),
       },
     ];
   }, [data, iconMap]);
+
+  const handleCardTap = (industry) => {
+    setSelectedIndustry(industry);
+    setIsModalOpen(true);
+  };
 
   const title = section?.title || 'Our Industries';
   const subtitle = section?.subtitle || 'StagePass Audio Visual serves a diverse range of industries with tailored solutions.';
@@ -128,15 +208,46 @@ const Industries = ({ data }) => {
               style={{ transitionDelay: `${index * 100}ms` }}
             >
               <IndustryCard
-                key={index}
                 title={industry.title}
                 icon={industry.icon}
                 iconUrl={industry.iconUrl}
+                description={industry.description}
+                onTap={() => handleCardTap(industry)}
               />
             </div>
           ))}
         </div>
       </div>
+
+      {/* Mobile Modal */}
+      {selectedIndustry && (() => {
+        const IconComponent = selectedIndustry.icon;
+        return (
+          <Dialog open={isModalOpen} onOpenChange={setIsModalOpen}>
+            <DialogContent className="max-w-md bg-white">
+              <DialogHeader>
+                <div className="flex items-center justify-center mb-4">
+                  {selectedIndustry.iconUrl ? (
+                    <img 
+                      src={selectedIndustry.iconUrl} 
+                      alt={selectedIndustry.title} 
+                      className="h-16 w-16 object-contain" 
+                    />
+                  ) : IconComponent ? (
+                    <IconComponent className="text-yellow-400" size={64} />
+                  ) : null}
+                </div>
+                <DialogTitle className="text-2xl font-bold text-[#172455] text-center">
+                  {selectedIndustry.title}
+                </DialogTitle>
+                <DialogDescription className="text-gray-600 text-center mt-4 leading-relaxed">
+                  {selectedIndustry.description}
+                </DialogDescription>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        );
+      })()}
     </section>
   );
 };
