@@ -64,7 +64,7 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
           <h3 className="font-bold text-yellow-400 text-xl mb-3 text-center">{title}</h3>
           {overlayDescription ? (
             <div 
-              className="text-sm text-slate-200 text-center leading-relaxed prose prose-invert prose-sm max-w-none"
+              className="text-sm text-slate-200 leading-relaxed prose prose-invert prose-sm max-w-none w-full"
               dangerouslySetInnerHTML={{ __html: overlayDescription }}
             />
           ) : (
@@ -107,6 +107,17 @@ const Industries = ({ data }) => {
   const section = data?.section;
   
   const iconMap = useMemo(() => ({
+    'Corporate & Business Events': Building2,
+    'Entertainment & Live Shows': Music,
+    'Exhibitions & Trade Shows': Clapperboard,
+    'Education & Training': Building2,
+    'Religious Institutions': Building2,
+    'Hospitality & Tourism': Gem,
+    'Healthcare & Medical': Building2,
+    'Government & Public Sector': Building2,
+    'Retail & Brand Experiences': Palette,
+    'Media, Film & Broadcasting': Clapperboard,
+    // Legacy mappings for backward compatibility
     Concerts: Music,
     'Corporate Events': Building2,
     Fashion: Palette,
@@ -131,44 +142,54 @@ const Industries = ({ data }) => {
     }
     return [
       {
-        title: "Concerts",
-        icon: Music,
-        description: getIndustryDescription("Concerts"),
-      },
-      {
-        title: "Corporate Events",
+        title: "Corporate & Business Events",
         icon: Building2,
-        description: getIndustryDescription("Corporate Events"),
+        description: 'Professional audio-visual solutions for corporate gatherings, conferences, and business events.',
       },
       {
-        title: "Fashion",
-        icon: Palette,
-        description: getIndustryDescription("Fashion"),
+        title: "Entertainment & Live Shows",
+        icon: Music,
+        description: 'Immersive audio-visual experiences for concerts, festivals, and live performances.',
       },
       {
-        title: "Theater & Dance",
-        icon: Theater,
-        description: getIndustryDescription("Theater & Dance"),
-      },
-      {
-        title: "Gala Dinners",
-        icon: Gem,
-        description: getIndustryDescription("Gala Dinners"),
-      },
-      {
-        title: "Trade shows",
+        title: "Exhibitions & Trade Shows",
         icon: Clapperboard,
-        description: getIndustryDescription("Trade shows"),
+        description: 'Engaging displays and interactive solutions for exhibitions and trade shows.',
       },
       {
-        title: "Sporting Events",
-        icon: Trophy,
-        description: getIndustryDescription("Sporting Events"),
+        title: "Education & Training",
+        icon: Building2,
+        description: 'Comprehensive AV solutions for educational institutions and training centers.',
       },
       {
-        title: "Nonprofit Events",
-        icon: Handshake,
-        description: getIndustryDescription("Nonprofit Events"),
+        title: "Religious Institutions",
+        icon: Building2,
+        description: 'Professional AV systems for worship services, conferences, and religious events.',
+      },
+      {
+        title: "Hospitality & Tourism",
+        icon: Gem,
+        description: 'Elegant AV solutions for hotels, resorts, and destination events.',
+      },
+      {
+        title: "Healthcare & Medical",
+        icon: Building2,
+        description: 'Specialized AV solutions for medical conferences and healthcare facilities.',
+      },
+      {
+        title: "Government & Public Sector",
+        icon: Building2,
+        description: 'Large-scale AV solutions for government functions and public events.',
+      },
+      {
+        title: "Retail & Brand Experiences",
+        icon: Palette,
+        description: 'Dynamic displays and interactive experiences for retail and brand activations.',
+      },
+      {
+        title: "Media, Film & Broadcasting",
+        icon: Clapperboard,
+        description: 'Professional studio and broadcast solutions for media production.',
       },
     ];
   }, [data, iconMap]);
@@ -178,7 +199,7 @@ const Industries = ({ data }) => {
     setIsModalOpen(true);
   };
 
-  const title = section?.title || 'Our Industries';
+  const title = section?.title || 'Industries We Serve';
   const subtitle = section?.subtitle || 'StagePass Audio Visual serves a diverse range of industries with tailored solutions.';
 
   return (
@@ -243,14 +264,14 @@ const Industries = ({ data }) => {
                 <DialogTitle className="text-2xl font-bold text-[#172455] text-center">
                   {selectedIndustry.title}
                 </DialogTitle>
-                <DialogDescription className="text-gray-600 text-center mt-4 leading-relaxed">
+                <DialogDescription className="text-gray-600 mt-4 leading-relaxed">
                   {selectedIndustry.overlayDescription ? (
                     <div 
-                      className="prose prose-sm max-w-none text-left"
+                      className="prose prose-sm max-w-none w-full"
                       dangerouslySetInnerHTML={{ __html: selectedIndustry.overlayDescription }}
                     />
                   ) : (
-                    selectedIndustry.description
+                    <p className="text-center">{selectedIndustry.description}</p>
                   )}
                 </DialogDescription>
               </DialogHeader>
