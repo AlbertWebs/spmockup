@@ -53,6 +53,8 @@ const About = ({ data }) => {
   const buttonLabel = section?.button_label || 'Learn More About Us';
   const visionTitle = section?.vision_title || 'Our Vision';
   const visionText = section?.vision_text || "TO BE AFRICA'S REVOLUTIONARY EVENTS TECHNOLOGY EXPERTS";
+  const peopleTitle = section?.people_title || 'Our People';
+  const peopleDescription = section?.people_description || "While we've got the most trusted audiovisual, staging and lighting brands available to you, it is our unparalleled team that will exceed your expectations.";
 
   return (
     <>
@@ -141,6 +143,20 @@ const About = ({ data }) => {
               </p>
             </div>
           </div>
+
+          {/* Our People Section */}
+          {peopleTitle && peopleDescription && (
+            <div className="mt-8 md:mt-16 mb-8 text-center animate-fade-in-up">
+              <div className="max-w-5xl mx-auto bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 md:p-16 border-2 border-gray-100 shadow-2xl relative overflow-hidden">
+                <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-200 rounded-full blur-3xl opacity-30"></div>
+                <div className="text-center max-w-3xl mx-auto relative z-10">
+                  <h3 className="text-3xl md:text-4xl font-black text-[#172455] mb-4 md:mb-6">{peopleTitle}</h3>
+                  <div className="h-2 w-24 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full mx-auto mb-6"></div>
+                  <p className="text-lg md:text-2xl text-gray-700 leading-relaxed font-medium">{peopleDescription}</p>
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
 

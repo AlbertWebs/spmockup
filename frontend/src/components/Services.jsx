@@ -4,7 +4,6 @@ import useOnScreen from '../hooks/useOnScreen';
 
 const Services = ({ data }) => {
   const [capabilitiesRef, capabilitiesIsVisible] = useOnScreen({ threshold: 0.1 });
-  const [peopleRef, peopleIsVisible] = useOnScreen({ threshold: 0.1 });
   const section = data?.section;
   const iconMap = useMemo(() => ({
     Box,
@@ -90,9 +89,6 @@ const Services = ({ data }) => {
   const title = section?.title || 'One-Stop-Solution For All Your AV Services';
   const description = section?.description
     || 'From concept to set-up to on-site support, we are there every step of the way to provide you with the exceptional product and service you deserve.';
-  const peopleTitle = section?.people_title || 'Our People';
-  const peopleDescription = section?.people_description
-    || "While we've got the most trusted audiovisual, staging and lighting brands available to you, it is our unparalleled team that will exceed your expectations.";
 
   return (
     <>
@@ -138,18 +134,6 @@ const Services = ({ data }) => {
               </div>
             </div>
           ))}
-        </div>
-
-        {/* Our People Section */}
-        <div ref={peopleRef} className={`mt-8 md:mt-16 mb-8 bg-gradient-to-br from-gray-50 to-white rounded-3xl p-8 md:p-16 border-2 border-gray-100 shadow-2xl relative overflow-hidden transition-all duration-1000 transform ${peopleIsVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}>
-          <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-200 rounded-full blur-3xl opacity-30"></div>
-          <div className="text-center max-w-3xl mx-auto relative z-10">
-            <h3 className="text-3xl md:text-4xl font-black text-[#172455] mb-4 md:mb-6">{peopleTitle}</h3>
-            <div className="h-2 w-24 bg-gradient-to-r from-yellow-500 to-yellow-600 rounded-full mx-auto mb-6"></div>
-            <p className="text-lg md:text-2xl text-gray-700 leading-relaxed font-medium">
-              {peopleDescription}
-            </p>
-          </div>
         </div>
       </div>
       
