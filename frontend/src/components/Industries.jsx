@@ -53,25 +53,29 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
         </div>
 
         {/* Hover Overlay with Details */}
-        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-6 rounded-2xl flex flex-col justify-center items-center transition-all duration-500 overflow-y-auto ${
+        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-4 rounded-2xl flex flex-col justify-start items-center transition-all duration-500 overflow-hidden ${
           isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}>
-          {iconUrl ? (
-            <img src={iconUrl} alt={title} className="h-12 w-12 object-contain mb-4" />
-          ) : (
-            <Icon className="text-yellow-400 mb-4" size={48} />
-          )}
-          <h3 className="font-bold text-yellow-400 text-xl mb-3 text-center">{title}</h3>
-          {overlayDescription ? (
-            <div 
-              className="text-sm text-slate-200 leading-relaxed prose prose-invert prose-sm max-w-none w-full"
-              dangerouslySetInnerHTML={{ __html: overlayDescription }}
-            />
-          ) : (
-            <p className="text-sm text-slate-200 text-center leading-relaxed line-clamp-4">
-              {description}
-            </p>
-          )}
+          <div className="flex-shrink-0">
+            {iconUrl ? (
+              <img src={iconUrl} alt={title} className="h-10 w-10 object-contain mb-2" />
+            ) : (
+              <Icon className="text-yellow-400 mb-2" size={40} />
+            )}
+          </div>
+          <h3 className="font-bold text-yellow-400 text-lg mb-2 text-center flex-shrink-0">{title}</h3>
+          <div className="flex-1 overflow-hidden w-full">
+            {overlayDescription ? (
+              <div 
+                className="text-xs text-slate-200 leading-tight prose prose-invert prose-sm max-w-none w-full [&_p]:mb-1 [&_ul]:mb-2 [&_li]:mb-0.5"
+                dangerouslySetInnerHTML={{ __html: overlayDescription }}
+              />
+            ) : (
+              <p className="text-xs text-slate-200 text-center leading-tight line-clamp-6">
+                {description}
+              </p>
+            )}
+          </div>
         </div>
       </div>
 
