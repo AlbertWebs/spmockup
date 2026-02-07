@@ -125,8 +125,8 @@ const Home = () => {
       <About data={homepageData?.about} />
       <Services data={homepageData?.services} />
       <Stats data={homepageData?.stats} />
-      <Portfolio data={homepageData?.portfolio} portfolioSource={homepageData?.settings?.portfolio_source} />
       <Industries data={homepageData?.industries} />
+      <Portfolio data={homepageData?.portfolio} portfolioSource={homepageData?.settings?.portfolio_source} />
       <Clients data={homepageData?.clients} />
         <Contact data={homepageData?.contact} />
         <Footer data={homepageData?.footer} />
