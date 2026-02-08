@@ -8,7 +8,11 @@ const Hero = ({ data }) => {
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [thumbnailError, setThumbnailError] = useState(false);
+  const [showThumbnail, setShowThumbnail] = useState(true);
+  const [videoCanPlay, setVideoCanPlay] = useState(false);
+  const [videoFadeIn, setVideoFadeIn] = useState(false);
   const videoRef = useRef(null);
+  const thumbnailTimerRef = useRef(null);
   const typingRef = useRef(null);
   const dimmingRef = useRef(null);
   const startRef = useRef(null);
@@ -105,34 +109,44 @@ const Hero = ({ data }) => {
     };
   }, [fullText]);
 
-  // Handle video loading
+  // Handle video loading and 10-second thumbnail delay
   useEffect(() => {
     // Reset states when video changes
     setVideoLoaded(false);
     setVideoError(false);
     setThumbnailError(false);
+    setShowThumbnail(true);
+    setVideoCanPlay(false);
+    setVideoFadeIn(false);
+
+    // Clear any existing thumbnail timer
+    if (thumbnailTimerRef.current) {
+      clearTimeout(thumbnailTimerRef.current);
+    }
 
     if (videoRef.current) {
       const video = videoRef.current;
       
       const handleCanPlay = () => {
-        setVideoLoaded(true);
+        setVideoCanPlay(true);
         setVideoError(false);
+        // Don't set videoLoaded yet - wait for thumbnail delay
       };
 
       const handleError = () => {
         setVideoError(true);
+        setVideoCanPlay(false);
         setVideoLoaded(false);
       };
 
-      const handleLoadedData = () => {
-        // Video has loaded enough data to start playing
+      const handlePlay = () => {
         setVideoLoaded(true);
+        // Fade-in animation is handled by the 10-second timer
       };
 
       video.addEventListener('canplay', handleCanPlay);
-      video.addEventListener('loadeddata', handleLoadedData);
       video.addEventListener('error', handleError);
+      video.addEventListener('play', handlePlay);
 
       // Set loading strategy for faster loading
       video.load();
@@ -142,10 +156,68 @@ const Hero = ({ data }) => {
         video.preload = 'auto';
       }
 
+      // Show thumbnail for 10 seconds, then start video with fade animation
+      thumbnailTimerRef.current = setTimeout(() => {
+        // Check if video element still exists and is ready to play
+        if (videoRef.current) {
+          const currentVideo = videoRef.current;
+          // Check if video has an error
+          if (currentVideo.error) {
+            setVideoError(true);
+            return;
+          }
+          // Check if video is ready to play (readyState 3 = HAVE_FUTURE_DATA, 4 = HAVE_ENOUGH_DATA)
+          if (currentVideo.readyState >= 3) {
+            // Video is ready, start playing
+            currentVideo.play().then(() => {
+              // Video started playing, trigger fade animations
+              setTimeout(() => {
+                setVideoFadeIn(true);
+                // Fade out thumbnail after a brief moment
+                setTimeout(() => {
+                  setShowThumbnail(false);
+                }, 100);
+              }, 50);
+            }).catch((err) => {
+              console.error('Error playing video:', err);
+              setVideoError(true);
+            });
+          } else {
+            // Video not ready yet, wait for canplay event
+            const handleCanPlayAfterDelay = () => {
+              if (videoRef.current && !videoRef.current.error) {
+                videoRef.current.play().then(() => {
+                  // Video started playing, trigger fade animations
+                  setTimeout(() => {
+                    setVideoFadeIn(true);
+                    // Fade out thumbnail after a brief moment
+                    setTimeout(() => {
+                      setShowThumbnail(false);
+                    }, 100);
+                  }, 50);
+                }).catch((err) => {
+                  console.error('Error playing video:', err);
+                  setVideoError(true);
+                });
+              }
+              if (videoRef.current) {
+                videoRef.current.removeEventListener('canplay', handleCanPlayAfterDelay);
+              }
+            };
+            if (videoRef.current) {
+              videoRef.current.addEventListener('canplay', handleCanPlayAfterDelay);
+            }
+          }
+        }
+      }, 10000); // 10 seconds delay
+
       return () => {
+        if (thumbnailTimerRef.current) {
+          clearTimeout(thumbnailTimerRef.current);
+        }
         video.removeEventListener('canplay', handleCanPlay);
-        video.removeEventListener('loadeddata', handleLoadedData);
         video.removeEventListener('error', handleError);
+        video.removeEventListener('play', handlePlay);
       };
     }
   }, [backgroundVideo]);
@@ -153,18 +225,24 @@ const Hero = ({ data }) => {
     <section className="relative h-[56.25vw] md:h-screen flex items-center justify-center overflow-hidden bg-gray-900 text-white -mt-[4.25rem] md:mt-0" style={{ paddingTop: '4.25rem', minHeight: 'calc(100vh - 10rem)' }}>
       {/* Background Image/Video */}
       <div className="absolute inset-0 z-0">
-        {/* Thumbnail/Poster Image - Shows while video loads */}
-        {(!videoLoaded || videoError) && thumbnailUrl && !thumbnailError && (
-          <LazyImage
-            src={thumbnailUrl}
-            alt="Hero background"
-            className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
-              videoLoaded ? 'opacity-0' : 'opacity-100'
-            }`}
-            onError={() => setThumbnailError(true)}
-            width={1920}
-            height={1080}
-          />
+        {/* Thumbnail/Poster Image - Shows for 10 seconds before video starts, fades out when video starts */}
+        {showThumbnail && thumbnailUrl && !thumbnailError && (
+          <div 
+            className="absolute inset-0 w-full h-full z-10 pointer-events-none"
+            style={{
+              opacity: videoFadeIn ? 0 : 1,
+              transition: videoFadeIn ? 'opacity 2s ease-in-out' : 'none'
+            }}
+          >
+            <LazyImage
+              src={thumbnailUrl}
+              alt="Hero background"
+              className="w-full h-full object-cover"
+              onError={() => setThumbnailError(true)}
+              width={1920}
+              height={1080}
+            />
+          </div>
         )}
         
         {/* Fallback gradient if no thumbnail or thumbnail failed to load */}
@@ -172,20 +250,27 @@ const Hero = ({ data }) => {
           <div className="absolute inset-0 bg-gradient-to-br from-gray-800 via-gray-900 to-black"></div>
         )}
 
-        {/* Video - Shows once loaded */}
+        {/* Video - Starts playing after 10 seconds with smooth fade-in */}
         <video
           ref={videoRef}
           src={backgroundVideo}
           loop
-          autoPlay
           muted
           playsInline
           preload="auto"
           poster={thumbnailUrl || undefined}
-          className={`w-full h-full object-cover transition-opacity duration-1000 ${
-            videoLoaded && !videoError ? 'opacity-100' : 'opacity-0'
-          }`}
-          onCanPlay={() => setVideoLoaded(true)}
+          className="w-full h-full object-cover"
+          style={{ 
+            opacity: videoFadeIn && videoLoaded && !videoError ? 1 : 0,
+            transition: videoFadeIn ? 'opacity 2s ease-in-out' : 'none',
+            zIndex: videoFadeIn ? 5 : 0,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%'
+          }}
+          onCanPlay={() => setVideoCanPlay(true)}
           onError={() => setVideoError(true)}
         />
         
