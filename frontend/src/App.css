@@ -156,6 +156,18 @@ html {
     }
 }
 
+@keyframes gradient-border {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
 @keyframes text-reveal {
     from {
         opacity: 0;
@@ -293,6 +305,11 @@ html {
 .animate-gradient-x {
     background-size: 200% 200%;
     animation: gradient-x 3s ease infinite;
+}
+
+.animate-gradient-border {
+    background-size: 200% 100%;
+    animation: gradient-border 3s ease infinite;
 }
 
 .animate-text-reveal {

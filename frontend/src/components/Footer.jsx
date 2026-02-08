@@ -86,10 +86,12 @@ const Footer = ({ data }) => {
           <div className={`grid md:grid-cols-2 lg:grid-cols-4 gap-8 mb-12 ${isVisible ? 'animate-fade-in-up' : 'opacity-0'}`}>
           {/* Column 1 - Brand */}
           <div className="space-y-6">
-            <img 
+            <LazyImage 
               src={logoUrl}
               alt="StagePass Logo" 
               className="h-12 w-auto object-contain brightness-0 invert"
+              width={200}
+              height={48}
             />
             <p className="text-gray-300 text-sm leading-relaxed font-medium">
               {description}

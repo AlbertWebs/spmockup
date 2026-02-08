@@ -5,6 +5,7 @@ import ImageModal from './ImageModal'; // Import the new ImageModal component
 import VideoModal from './VideoModal';
 import useOnScreen from '../hooks/useOnScreen';
 import { API_BASE_URL } from '../config/api';
+import LazyImage from './LazyImage';
 
 const Portfolio = ({ data, portfolioSource }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
@@ -220,13 +221,12 @@ const Portfolio = ({ data, portfolioSource }) => {
                   setIsImageModalOpen(true);
                 }}
               >
-                <img
+                <LazyImage
                   src={thumbnail}
                   alt={`${itemTitle} - StagePass Audio Visual Portfolio`}
                   className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
-                  loading="lazy"
-                  width="400"
-                  height="300"
+                  width={400}
+                  height={300}
                 />
                 
                 {/* Gradient overlay - Hidden on mobile, visible on desktop */}
@@ -271,12 +271,11 @@ const Portfolio = ({ data, portfolioSource }) => {
                   setIsImageModalOpen(true);
                 }}
               >
-                <img
+                <LazyImage
                   src={thumbnail}
                   alt={`${itemTitle} - StagePass Audio Visual Portfolio`}
-                  loading="lazy"
-                  width="400"
-                  height="300"
+                  width={400}
+                  height={300}
                   className="w-full h-full object-cover group-hover:scale-125 transition-transform duration-700"
                 />
                 

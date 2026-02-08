@@ -113,17 +113,21 @@ const Navbar = ({ data, isPage = false }) => {
           <div className="flex items-center h-full group">
             {isPage ? (
               <Link to="/" className="h-full flex items-center">
-                <img 
+                <LazyImage 
                   src={logoUrl}
                   alt="StagePass Logo" 
                   className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                  width={200}
+                  height={80}
                 />
               </Link>
             ) : (
-              <img 
+              <LazyImage 
                 src={logoUrl}
                 alt="StagePass Logo" 
                 className="h-full w-auto object-contain transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3"
+                width={200}
+                height={80}
               />
             )}
           </div>

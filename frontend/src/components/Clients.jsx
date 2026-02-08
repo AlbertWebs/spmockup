@@ -1,6 +1,7 @@
 import React, { useMemo } from 'react';
 import useOnScreen from '../hooks/useOnScreen';
 import { API_BASE_URL } from '../config/api';
+import LazyImage from './LazyImage';
 
 const Clients = ({ data }) => {
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
@@ -64,13 +65,12 @@ const Clients = ({ data }) => {
                 <div className="bg-white rounded-2xl p-2 flex items-center justify-center h-full hover:shadow-2xl transition-all duration-500">
                   <div className="w-full h-24 flex items-center justify-center">
                     <div className="w-full h-full flex items-center justify-center p-0">
-                      <img 
+                      <LazyImage 
                         src={logo.src}
                         alt={logo.alt || `Client logo - ${logo.alt || 'StagePass client'}`}
                         className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                        loading="lazy"
-                        width="200"
-                        height="100"
+                        width={200}
+                        height={100}
                       />
                     </div>
                   </div>

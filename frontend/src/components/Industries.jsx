@@ -2,6 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Building2, Clapperboard, Gem, Handshake, Music, Palette, Theater, Trophy } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
 import { API_BASE_URL } from '../config/api';
+import LazyImage from './LazyImage';
 import {
   Dialog,
   DialogContent,
@@ -32,18 +33,19 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
     <>
       {/* Desktop: Hover overlay */}
       <div 
-        className="relative h-72 rounded-2xl overflow-hidden group transition-all duration-500 transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-yellow-500/20 bg-white/80 backdrop-blur border border-yellow-100 hidden md:block cursor-pointer"
+        className="relative h-72 rounded-2xl p-[3px] bg-gradient-to-r from-[#172455] via-yellow-400 to-[#172455] bg-[length:200%_100%] animate-gradient-border group transition-all duration-500 transform hover:-translate-y-3 hover:shadow-2xl hover:shadow-yellow-500/20 hidden md:block cursor-pointer"
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
+        <div className="relative h-full w-full rounded-2xl overflow-hidden bg-white/80 backdrop-blur">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-blue-50 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
         <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-200/40 blur-2xl group-hover:scale-110 transition-transform duration-500"></div>
         
         {/* Front of the card */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 rounded-2xl transition-transform duration-500 group-hover:scale-95">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 transition-transform duration-500 group-hover:scale-95">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#172455] to-[#1e3a8a] flex items-center justify-center shadow-2xl group-hover:scale-110 transition-transform duration-500">
             {iconUrl ? (
-              <img src={iconUrl} alt={title} className="h-10 w-10 object-contain" />
+              <LazyImage src={iconUrl} alt={title} className="h-10 w-10 object-contain" width={40} height={40} />
             ) : (
               <Icon className="text-yellow-300" size={36} />
             )}
@@ -53,12 +55,12 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
         </div>
 
         {/* Hover Overlay with Details */}
-        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-4 rounded-2xl flex flex-col justify-start items-center transition-all duration-500 overflow-hidden ${
+        <div className={`absolute inset-0 bg-gradient-to-br from-[#172455] to-[#1e3a8a] text-white p-4 flex flex-col justify-start items-center transition-all duration-500 overflow-hidden ${
           isHovered ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4 pointer-events-none'
         }`}>
           <div className="flex-shrink-0">
             {iconUrl ? (
-              <img src={iconUrl} alt={title} className="h-10 w-10 object-contain mb-2" />
+              <LazyImage src={iconUrl} alt={title} className="h-10 w-10 object-contain mb-2" width={40} height={40} />
             ) : (
               <Icon className="text-yellow-400 mb-2" size={40} />
             )}
@@ -77,27 +79,30 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
             )}
           </div>
         </div>
+        </div>
       </div>
 
       {/* Mobile: Tap to open modal */}
       <div 
-        className="relative h-72 rounded-2xl overflow-hidden group transition-all duration-500 transform active:scale-95 bg-white/80 backdrop-blur border border-yellow-100 block md:hidden cursor-pointer"
+        className="relative h-72 rounded-2xl p-[3px] bg-gradient-to-r from-[#172455] via-yellow-400 to-[#172455] bg-[length:200%_100%] animate-gradient-border group transition-all duration-500 transform active:scale-95 block md:hidden cursor-pointer"
         onClick={onTap}
       >
+        <div className="relative h-full w-full rounded-2xl overflow-hidden bg-white/80 backdrop-blur">
         <div className="absolute inset-0 bg-gradient-to-br from-yellow-50 via-white to-blue-50 opacity-0 group-active:opacity-100 transition-opacity duration-200"></div>
         <div className="absolute -top-10 -right-10 h-32 w-32 rounded-full bg-yellow-200/40 blur-2xl"></div>
         
         {/* Front of the card */}
-        <div className="absolute inset-0 flex flex-col items-center justify-center p-6 rounded-2xl">
+        <div className="absolute inset-0 flex flex-col items-center justify-center p-6">
           <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#172455] to-[#1e3a8a] flex items-center justify-center shadow-2xl">
             {iconUrl ? (
-              <img src={iconUrl} alt={title} className="h-10 w-10 object-contain" />
+              <LazyImage src={iconUrl} alt={title} className="h-10 w-10 object-contain" width={40} height={40} />
             ) : (
               <Icon className="text-yellow-300" size={36} />
             )}
           </div>
           <h3 className="text-2xl font-extrabold text-[#172455] mt-6 text-center">{title}</h3>
           <p className="text-sm text-gray-500 mt-2 text-center">Tap for details</p>
+        </div>
         </div>
       </div>
     </>
@@ -256,10 +261,12 @@ const Industries = ({ data }) => {
               <DialogHeader>
                 <div className="flex items-center justify-center mb-4">
                   {selectedIndustry.iconUrl ? (
-                    <img 
+                    <LazyImage 
                       src={selectedIndustry.iconUrl} 
                       alt={selectedIndustry.title} 
                       className="h-16 w-16 object-contain" 
+                      width={64}
+                      height={64}
                     />
                   ) : IconComponent ? (
                     <IconComponent className="text-[#172455]" size={64} />

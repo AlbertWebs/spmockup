@@ -1,4 +1,5 @@
 import React, { useMemo, useRef, useState, useEffect } from 'react';
+import LazyImage from './LazyImage';
 
 const Hero = ({ data }) => {
   const [typedText, setTypedText] = useState("");
@@ -154,14 +155,15 @@ const Hero = ({ data }) => {
       <div className="absolute inset-0 z-0">
         {/* Thumbnail/Poster Image - Shows while video loads */}
         {(!videoLoaded || videoError) && thumbnailUrl && !thumbnailError && (
-          <img
+          <LazyImage
             src={thumbnailUrl}
             alt="Hero background"
             className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-1000 ${
               videoLoaded ? 'opacity-0' : 'opacity-100'
             }`}
             onError={() => setThumbnailError(true)}
-            loading="eager"
+            width={1920}
+            height={1080}
           />
         )}
         

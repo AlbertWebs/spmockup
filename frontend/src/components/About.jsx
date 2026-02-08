@@ -72,11 +72,10 @@ const About = ({ data }) => {
             {/* Left - Image */}
             <div className="relative">
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-105 transition-transform duration-500">
-                <img
+                <LazyImage
                   src={imageUrl}
                   alt="StagePass Audio Visual - Professional event production and AV services in Kenya"
                   className="w-full h-[300px] md:h-[550px] object-cover"
-                  loading="lazy"
                   width="800"
                   height="600"
                 />
