@@ -92,7 +92,7 @@ const Services = ({ data }) => {
 
   return (
     <>
-    <section id="services" className="py-0 md:py-0 bg-white relative overflow-hidden">
+    <section id="services" className="py-0 md:py-0 pb-16 md:pb-24 bg-white relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute top-0 right-0 w-[700px] h-[700px] bg-yellow-100 rounded-full blur-3xl opacity-30 animate-pulse-slow"></div>
       <div className="absolute bottom-0 left-0 w-[700px] h-[700px] bg-[#172455] rounded-full blur-3xl opacity-5 animate-pulse-slower"></div>
@@ -111,7 +111,7 @@ const Services = ({ data }) => {
         </div>
 
         {/* Services Grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12 md:mb-16">
           {services.map((service, index) => (
             <div
               key={index}

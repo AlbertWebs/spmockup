@@ -67,7 +67,7 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
           <div className="flex-1 overflow-hidden w-full">
             {overlayDescription ? (
               <div 
-                className="text-xs text-slate-200 leading-tight prose prose-invert prose-sm max-w-none w-full [&_p]:mb-1 [&_ul]:mb-2 [&_li]:mb-0.5"
+                className="text-xs text-slate-200 leading-tight prose prose-invert prose-sm max-w-none w-full [&_p]:mb-1 [&_ul]:mb-2 [&_li]:mb-0.5 [&_p.font-bold]:!font-bold"
                 dangerouslySetInnerHTML={{ __html: overlayDescription }}
               />
             ) : (
@@ -262,7 +262,7 @@ const Industries = ({ data }) => {
                       className="h-16 w-16 object-contain" 
                     />
                   ) : IconComponent ? (
-                    <IconComponent className="text-yellow-400" size={64} />
+                    <IconComponent className="text-[#172455]" size={64} />
                   ) : null}
                 </div>
                 <DialogTitle className="text-2xl font-bold text-[#172455] text-center">
@@ -271,7 +271,7 @@ const Industries = ({ data }) => {
                 <DialogDescription className="text-gray-600 mt-4 leading-relaxed">
                   {selectedIndustry.overlayDescription ? (
                     <div 
-                      className="prose prose-sm max-w-none w-full"
+                      className="prose prose-sm max-w-none w-full [&_p.font-bold]:!font-bold"
                       dangerouslySetInnerHTML={{ __html: selectedIndustry.overlayDescription }}
                     />
                   ) : (
