@@ -2,6 +2,7 @@ import React, { useMemo } from 'react';
 import { CheckCircle2, Target, Users, Award } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
 import { Button } from './ui/button';
+import LazyImage from './LazyImage';
 
 // Helper function to decode HTML entities and return HTML content
 const decodeHtmlEntities = (text) => {

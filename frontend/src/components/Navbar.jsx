@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Menu, X } from 'lucide-react';
 import QuoteFormModal from './QuoteFormModal'; // Import the new modal component
+import LazyImage from './LazyImage';
 
 const Navbar = ({ data, isPage = false }) => {
   const location = useLocation();

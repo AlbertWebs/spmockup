@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { Facebook, Twitter, Instagram, Linkedin, Youtube, ArrowUp, Sparkles } from 'lucide-react';
 import useOnScreen from '../hooks/useOnScreen';
 import QuoteFormModal from './QuoteFormModal';
+import LazyImage from './LazyImage';
 
 const Footer = ({ data }) => {
   const location = useLocation();
