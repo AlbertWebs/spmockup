@@ -69,7 +69,7 @@ const IndustryCard = ({ title, icon: Icon, iconUrl, description, overlayDescript
           <div className="flex-1 overflow-hidden w-full">
             {overlayDescription ? (
               <div 
-                className="text-xs text-slate-200 leading-tight prose prose-invert prose-sm max-w-none w-full [&_p]:mb-1 [&_ul]:mb-2 [&_li]:mb-0.5 [&_p.font-bold]:!font-bold"
+                className="text-xs text-slate-200 leading-tight prose prose-invert prose-sm max-w-none w-full [&_p]:mb-1 [&_ul]:mb-2 [&_li]:mb-0.5 [&_.services-label]:!font-bold [&_.services-label]:!text-[#172455] [&_.services-label]:underline [&_.av-needs-label]:!font-bold [&_.av-needs-label]:!text-[#172455] [&_.av-needs-label]:underline"
                 dangerouslySetInnerHTML={{ __html: overlayDescription }}
               />
             ) : (
@@ -278,7 +278,7 @@ const Industries = ({ data }) => {
                 <DialogDescription className="text-gray-600 mt-4 leading-relaxed">
                   {selectedIndustry.overlayDescription ? (
                     <div 
-                      className="prose prose-sm max-w-none w-full [&_p.font-bold]:!font-bold"
+                      className="prose prose-sm max-w-none w-full [&_.services-label]:!font-bold [&_.services-label]:!text-[#172455] [&_.services-label]:underline [&_.av-needs-label]:!font-bold [&_.av-needs-label]:!text-[#172455] [&_.av-needs-label]:underline"
                       dangerouslySetInnerHTML={{ __html: selectedIndustry.overlayDescription }}
                     />
                   ) : (
