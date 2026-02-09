@@ -129,7 +129,7 @@ const Home = () => {
       <Portfolio data={homepageData?.portfolio} portfolioSource={homepageData?.settings?.portfolio_source} />
       <Clients data={homepageData?.clients} />
         <Contact data={homepageData?.contact} />
-        <Footer data={homepageData?.footer} />
+        <Footer data={homepageData?.footer} settings={homepageData?.settings} />
         <BottomNavbar data={homepageData?.navigation?.bottom_links} />
       </div>
     </>

@@ -101,7 +101,7 @@ const ServicePage = () => {
               {error}
             </p>
           </main>
-          <Footer data={homepageData?.footer} />
+          <Footer data={homepageData?.footer} settings={homepageData?.settings} />
           <BottomNavbar data={homepageData?.navigation?.bottom_links} isPage={true} />
         </div>
       </>

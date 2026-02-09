@@ -4,8 +4,9 @@ import { Facebook, Twitter, Instagram, Linkedin, Youtube, ArrowUp, Sparkles } fr
 import useOnScreen from '../hooks/useOnScreen';
 import QuoteFormModal from './QuoteFormModal';
 import LazyImage from './LazyImage';
+import { API_BASE_URL } from '../config/api';
 
-const Footer = ({ data }) => {
+const Footer = ({ data, settings }) => {
   const location = useLocation();
   const [ref, isVisible] = useOnScreen({ threshold: 0.1 });
   const [isQuoteModalOpen, setIsQuoteModalOpen] = useState(false);
@@ -15,17 +16,46 @@ const Footer = ({ data }) => {
   };
 
   const section = data?.section;
-  const socialLinks = useMemo(() => (
-    data?.social_links?.length
-      ? data.social_links
-      : [
-          { platform: 'Facebook', url: '#' },
-          { platform: 'Twitter', url: '#' },
-          { platform: 'Instagram', url: '#' },
-          { platform: 'Linkedin', url: '#' },
-          { platform: 'Youtube', url: '#' },
-        ]
-  ), [data]);
+  
+  // Build social links from settings (API) or fall back to footer social_links
+  const socialLinks = useMemo(() => {
+    // First, try to use settings from API
+    if (settings) {
+      const links = [];
+      if (settings.facebook_url) {
+        links.push({ platform: 'Facebook', url: settings.facebook_url });
+      }
+      if (settings.twitter_url) {
+        links.push({ platform: 'Twitter', url: settings.twitter_url });
+      }
+      if (settings.instagram_url) {
+        links.push({ platform: 'Instagram', url: settings.instagram_url });
+      }
+      if (settings.linkedin_url) {
+        links.push({ platform: 'Linkedin', url: settings.linkedin_url });
+      }
+      if (settings.youtube_url) {
+        links.push({ platform: 'Youtube', url: settings.youtube_url });
+      }
+      if (links.length > 0) {
+        return links;
+      }
+    }
+    
+    // Fall back to footer social_links from database
+    if (data?.social_links?.length) {
+      return data.social_links;
+    }
+    
+    // Default fallback
+    return [
+      { platform: 'Facebook', url: '#' },
+      { platform: 'Twitter', url: '#' },
+      { platform: 'Instagram', url: '#' },
+      { platform: 'Linkedin', url: '#' },
+      { platform: 'Youtube', url: '#' },
+    ];
+  }, [data, settings]);
 
   // Quick Links - use page routes if not on homepage, otherwise use anchor links
   const quickLinks = isHomepage && data?.quick_links?.length
@@ -59,7 +89,19 @@ const Footer = ({ data }) => {
         { label: 'Equipment Rentals' },
       ];
 
-  const logoUrl = section?.logo_url || 'https://stagepass.nuhiluxurytravel.com/uploads/StagePass-LOGO-y.png';
+  // Prioritize site_logo_url from settings, then footer section logo_url, then default
+  const logoUrl = useMemo(() => {
+    const url = settings?.site_logo_url || section?.logo_url;
+    if (url) {
+      // If URL is relative, prepend API_BASE_URL
+      if (url.startsWith('/') || (!url.startsWith('http://') && !url.startsWith('https://'))) {
+        return `${API_BASE_URL}${url.startsWith('/') ? url : '/' + url}`;
+      }
+      return url;
+    }
+    // Default fallback
+    return `${API_BASE_URL}/uploads/StagePass-LOGO-y.png`;
+  }, [settings?.site_logo_url, section?.logo_url]);
   const description = section?.description
     || "Africa's premier audio-visual and event technology provider, delivering excellence through innovation and expertise.";
   const currentYear = new Date().getFullYear();
