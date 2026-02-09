@@ -56,27 +56,44 @@ const Clients = ({ data }) => {
 
           {/* Clients Grid */}
           <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-8">
-            {clientLogos.map((logo, index) => (
-              <div
-                key={index}
-                className="rounded-2xl p-[3px] bg-gradient-to-br from-yellow-400 via-orange-500 to-yellow-600 hover:from-yellow-300 hover:via-orange-400 hover:to-yellow-500 transition-all duration-500 hover:-translate-y-2 cursor-pointer group"
-                style={{ animationDelay: `${index * 50}ms` }}
-              >
-                <div className="bg-white rounded-2xl p-2 flex items-center justify-center h-full hover:shadow-2xl transition-all duration-500">
-                  <div className="w-full h-24 flex items-center justify-center">
-                    <div className="w-full h-full flex items-center justify-center p-0">
-                      <LazyImage 
-                        src={logo.src}
-                        alt={logo.alt || `Client logo - ${logo.alt || 'StagePass client'}`}
-                        className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
-                        width={200}
-                        height={100}
-                      />
+            {clientLogos.map((logo, index) => {
+              const totalItems = clientLogos.length;
+              const itemsPerRow = 5; // lg:grid-cols-5
+              const itemsInLastRow = totalItems % itemsPerRow;
+              const isLastRow = index >= totalItems - itemsInLastRow;
+              const isIncompleteLastRow = itemsInLastRow > 0 && itemsInLastRow < itemsPerRow;
+              const positionInLastRow = isLastRow ? index - (totalItems - itemsInLastRow) : -1;
+              
+              // For 3 items in last row, center them by starting at column 2
+              let gridColumnClass = '';
+              if (isLastRow && isIncompleteLastRow && itemsInLastRow === 3 && positionInLastRow === 0) {
+                gridColumnClass = 'lg:col-start-2';
+              }
+              
+              return (
+                <div
+                  key={index}
+                  className={`rounded-2xl p-[3px] bg-gradient-to-br from-yellow-400 via-orange-500 to-yellow-600 hover:from-yellow-300 hover:via-orange-400 hover:to-yellow-500 transition-all duration-500 hover:-translate-y-2 cursor-pointer group ${gridColumnClass}`}
+                  style={{ 
+                    animationDelay: `${index * 50}ms`
+                  }}
+                >
+                  <div className="bg-white rounded-2xl p-2 flex items-center justify-center h-full hover:shadow-2xl transition-all duration-500">
+                    <div className="w-full h-24 flex items-center justify-center">
+                      <div className="w-full h-full flex items-center justify-center p-0">
+                        <LazyImage 
+                          src={logo.src}
+                          alt={logo.alt || `Client logo - ${logo.alt || 'StagePass client'}`}
+                          className="max-w-full max-h-full object-contain group-hover:scale-110 transition-transform duration-500"
+                          width={200}
+                          height={100}
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

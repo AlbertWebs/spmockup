@@ -233,22 +233,38 @@ const Industries = ({ data }) => {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-          {industryData.map((industry, index) => (
-            <div
-              key={index}
-              className={`transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-              style={{ transitionDelay: `${index * 100}ms` }}
-            >
-              <IndustryCard
-                title={industry.title}
-                icon={industry.icon}
-                iconUrl={industry.iconUrl}
-                description={industry.description}
-                overlayDescription={industry.overlayDescription}
-                onTap={() => handleCardTap(industry)}
-              />
-            </div>
-          ))}
+          {industryData.map((industry, index) => {
+            const totalItems = industryData.length;
+            const itemsPerRow = 3; // lg:grid-cols-3
+            const itemsInLastRow = totalItems % itemsPerRow;
+            const isLastRow = index >= totalItems - itemsInLastRow;
+            const isIncompleteLastRow = itemsInLastRow > 0 && itemsInLastRow < itemsPerRow;
+            
+            // For single item in last row, center it by starting at column 2
+            let gridColumnClass = '';
+            if (isLastRow && isIncompleteLastRow && itemsInLastRow === 1) {
+              gridColumnClass = 'lg:col-start-2';
+            }
+            
+            return (
+              <div
+                key={index}
+                className={`transition-all duration-1000 transform ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'} ${gridColumnClass}`}
+                style={{ 
+                  transitionDelay: `${index * 100}ms`
+                }}
+              >
+                <IndustryCard
+                  title={industry.title}
+                  icon={industry.icon}
+                  iconUrl={industry.iconUrl}
+                  description={industry.description}
+                  overlayDescription={industry.overlayDescription}
+                  onTap={() => handleCardTap(industry)}
+                />
+              </div>
+            );
+          })}
         </div>
       </div>
 
