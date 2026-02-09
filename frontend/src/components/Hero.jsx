@@ -5,6 +5,7 @@ const Hero = ({ data }) => {
   const [typedText, setTypedText] = useState("");
   const [textVisible, setTextVisible] = useState(false); 
   const [textDimmed, setTextDimmed] = useState(false); // New state for dimming text
+  const [textFadeOut, setTextFadeOut] = useState(false); // State for fade-out-down animation
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [thumbnailError, setThumbnailError] = useState(false);
@@ -15,6 +16,7 @@ const Hero = ({ data }) => {
   const thumbnailTimerRef = useRef(null);
   const typingRef = useRef(null);
   const dimmingRef = useRef(null);
+  const fadeOutTimerRef = useRef(null);
   const startRef = useRef(null);
   const isAnimatingRef = useRef(false); // Track if animation is currently running
   const fullText = useMemo(
@@ -61,11 +63,15 @@ const Hero = ({ data }) => {
     if (dimmingRef.current) {
       clearTimeout(dimmingRef.current);
     }
+    if (fadeOutTimerRef.current) {
+      clearTimeout(fadeOutTimerRef.current);
+    }
 
     // Reset states
     setTypedText("");
     setTextVisible(false);
     setTextDimmed(false);
+    setTextFadeOut(false);
     isAnimatingRef.current = true;
 
     // Start typing animation after 3 seconds
@@ -91,6 +97,11 @@ const Hero = ({ data }) => {
       }, 70); // Typing speed in ms per character
     }, 3000); // 3 seconds delay before typing starts 
 
+    // Start fade-out-down animation after 10 seconds from component mount
+    fadeOutTimerRef.current = setTimeout(() => {
+      setTextFadeOut(true);
+    }, 10000); // 10 seconds delay
+
     return () => {
       if (startRef.current) {
         clearTimeout(startRef.current);
@@ -103,6 +114,10 @@ const Hero = ({ data }) => {
       if (dimmingRef.current) {
         clearTimeout(dimmingRef.current);
         dimmingRef.current = null;
+      }
+      if (fadeOutTimerRef.current) {
+        clearTimeout(fadeOutTimerRef.current);
+        fadeOutTimerRef.current = null;
       }
       // Reset the flag when effect is cleaned up
       isAnimatingRef.current = false;
@@ -278,7 +293,14 @@ const Hero = ({ data }) => {
       </div>
 
       {/* Content */}
-      <div className={`relative z-10 text-center max-w-4xl mx-auto px-4 transition-opacity duration-1000 ${textVisible ? (textDimmed ? 'opacity-25' : 'opacity-100') : 'opacity-0'}`}>
+      <div 
+        className={`relative z-10 text-center max-w-4xl mx-auto px-4 transition-opacity duration-1000 ${textVisible ? (textDimmed ? 'opacity-25' : 'opacity-100') : 'opacity-0'}`}
+        style={{
+          opacity: textFadeOut ? 0 : (textVisible ? (textDimmed ? 0.25 : 1) : 0),
+          transform: textFadeOut ? 'translateY(100px)' : 'translateY(0)',
+          transition: textFadeOut ? 'opacity 10s ease-in-out, transform 10s ease-in-out' : 'opacity 1s ease-in-out, transform 0s ease-in-out'
+        }}
+      >
         <h1
           className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight leading-none mb-6 text-white uppercase"
         >
