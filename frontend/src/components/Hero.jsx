@@ -8,6 +8,7 @@ const Hero = ({ data }) => {
   const [textFadeOut, setTextFadeOut] = useState(false); // State for fade-out-down animation
   const [secondTextVisible, setSecondTextVisible] = useState(false); // State for second text fade-in
   const [secondTextDimmed, setSecondTextDimmed] = useState(false); // State for second text dimming
+  const [secondTextFadeOut, setSecondTextFadeOut] = useState(false); // State for second text fade-out
   const [videoLoaded, setVideoLoaded] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [thumbnailError, setThumbnailError] = useState(false);
@@ -21,6 +22,7 @@ const Hero = ({ data }) => {
   const fadeOutTimerRef = useRef(null);
   const secondTextTimerRef = useRef(null);
   const secondTextDimmingRef = useRef(null);
+  const secondTextFadeOutTimerRef = useRef(null);
   const startRef = useRef(null);
   const isAnimatingRef = useRef(false); // Track if animation is currently running
   const fullText = useMemo(
@@ -76,6 +78,9 @@ const Hero = ({ data }) => {
     if (secondTextDimmingRef.current) {
       clearTimeout(secondTextDimmingRef.current);
     }
+    if (secondTextFadeOutTimerRef.current) {
+      clearTimeout(secondTextFadeOutTimerRef.current);
+    }
 
     // Reset states
     setTypedText("");
@@ -84,6 +89,7 @@ const Hero = ({ data }) => {
     setTextFadeOut(false);
     setSecondTextVisible(false);
     setSecondTextDimmed(false);
+    setSecondTextFadeOut(false);
     isAnimatingRef.current = true;
 
     // Start typing animation after 3 seconds
@@ -119,6 +125,10 @@ const Hero = ({ data }) => {
         secondTextDimmingRef.current = setTimeout(() => {
           setSecondTextDimmed(true);
         }, 5000); // 5 seconds after second text becomes fully visible
+        // Start second text fade-out 20 seconds after it starts appearing
+        secondTextFadeOutTimerRef.current = setTimeout(() => {
+          setSecondTextFadeOut(true);
+        }, 20000); // 20 seconds after second text starts appearing
       }, 10000); // 10 seconds delay after first text starts fading
     }, 10000); // 10 seconds delay
 
@@ -146,6 +156,10 @@ const Hero = ({ data }) => {
       if (secondTextDimmingRef.current) {
         clearTimeout(secondTextDimmingRef.current);
         secondTextDimmingRef.current = null;
+      }
+      if (secondTextFadeOutTimerRef.current) {
+        clearTimeout(secondTextFadeOutTimerRef.current);
+        secondTextFadeOutTimerRef.current = null;
       }
       // Reset the flag when effect is cleaned up
       isAnimatingRef.current = false;
@@ -342,9 +356,9 @@ const Hero = ({ data }) => {
         <div
           className="absolute inset-0 flex items-center justify-center"
           style={{
-            opacity: secondTextVisible ? (secondTextDimmed ? 0.25 : 1) : 0,
-            transform: secondTextVisible ? 'translateY(0)' : 'translateY(100px)',
-            transition: secondTextVisible ? 'opacity 10s ease-in-out, transform 10s ease-in-out' : 'opacity 0s ease-in-out, transform 0s ease-in-out',
+            opacity: secondTextFadeOut ? 0 : (secondTextVisible ? (secondTextDimmed ? 0.25 : 1) : 0),
+            transform: secondTextFadeOut ? 'translateY(100px)' : (secondTextVisible ? 'translateY(0)' : 'translateY(100px)'),
+            transition: secondTextFadeOut ? 'opacity 10s ease-in-out, transform 10s ease-in-out' : (secondTextVisible ? 'opacity 10s ease-in-out, transform 10s ease-in-out' : 'opacity 0s ease-in-out, transform 0s ease-in-out'),
             pointerEvents: 'none'
           }}
         >
